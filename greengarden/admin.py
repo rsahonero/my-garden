@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Hecho
+
+
+class HechoAdmin(admin.ModelAdmin):
+    model = Hecho
+
+admin.site.register(Hecho)

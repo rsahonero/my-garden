@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+
+class Hecho(models.Model):
+    valor = models.CharField(max_length=150)
