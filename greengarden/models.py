@@ -22,4 +22,5 @@ class Hecho(models.Model):
                    reglas.
     """
     valor = models.CharField(max_length=150)
+    es_meta = models.BooleanField(default=False)
     reglas = models.ManyToManyField(Regla)
