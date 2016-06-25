@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Green Garden{% endblock %}</title>
+</head>
+<body>
+<header>
+    <h1>Green Garden</h1>
+</header>
+<nav>
+    {% block navbar%}
+    <ul>
+        <li><a href="/greengarden">Index</a></li>
+    </ul>
+    {% endblock %}
+</nav>
+<section>
+    {% block content %}{% endblock %}
+</section>
+<footer>
+    &copy; 2016 Rosario Sahonero
+</footer>
+</body>
+</html>
