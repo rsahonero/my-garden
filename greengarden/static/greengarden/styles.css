@@ -3,7 +3,6 @@ body > .container {
 }
 
 .footer {
-    position: absolute;
     bottom: 0;
     width: 100%;
     height: 60px;
@@ -17,4 +16,13 @@ body > .container {
 
 .container .text-muted {
     margin: 20px 0;
+}
+
+.marketing h2 {
+    font-weight: normal;
+}
+
+.marketing .col-md-4 {
+    margin-bottom: 20px;
+    text-align: center;
 }
