@@ -18,11 +18,11 @@ body > .container {
     margin: 20px 0;
 }
 
-.marketing h2 {
+.home .marketing h2 {
     font-weight: normal;
 }
 
-.marketing .col-md-4 {
+.home .marketing .col-md-4 {
     margin-bottom: 20px;
     text-align: center;
 }

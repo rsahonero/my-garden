@@ -1,42 +1,45 @@
 {% extends "base.html" %} {% block content %}
-<div class="jumbotron">
-    <div class="container">
-        <p>
-            Bienvenido a <strong>Green Garden</strong> un sistema experto para los amantes de la floricultura.
-        </p>
-        <p>
-            Su funcionalidad es ayudarte en la monitorizaci&oacute;n y control de plagas y enfermedades en tus cultivos de flores y rosas.
-        </p>
+<div class="home">
+    <div class="jumbotron">
+        <div class="container">
+            <p>
+                Bienvenido a <strong>Green Garden</strong> un sistema experto para los amantes de la floricultura.
+            </p>
+            <p>
+                Su funcionalidad es ayudarte en la monitorizaci&oacute;n y control de plagas y enfermedades en tus cultivos de flores y rosas.
+            </p>
+        </div>
     </div>
-</div>
-<div class="row marketing">
-    <div class="col-md-4">
-        <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
-            width="140" height="140">
-        <h2>Condiciones Atmosf&eacute;ricas</h2>
-        <p>
-            La estacion es Primavera<br> La temperatura es Alta<br> El nivel de humedad es Normal<br> Ultimo escaneo: {{ ultimo_escaneo }}
-        </p>
-        <p>
-            <button class="btn btn-default">Actualizar</button>
-        </p>
-    </div>
-    <div class="col-md-4">
-        <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
-            width="140" height="140">
-        <h2>Su cultivo esta en riesgo</h2>
-        <p>
-            Debido a las condiciones atmosfericas, su cultivo presenta el riesgo de contener alguna plaga o enfermedad.
-            Porfavor complete el siguiente cuestionario para descartar cualquier riesgo.
-        </p>
-        <button class="btn btn-default">Continuar</button>
-    </div>
-    <div class="col-md-4">
-        <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
-            width="140" height="140">
-        <h2>Con&eacute;ctate</h2>
-        <p>Green garden es un proyecto dirigido por la comunidad.</p>
-        <p>No dudes en consultar tus dudas o aportar con sugerencias en los siguientes enlaces.</p>
+    <div class="row marketing">
+        <div class="col-md-4">
+            <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
+                width="140" height="140">
+            <h2>Condiciones Atmosf&eacute;ricas</h2>
+            <p>
+                La estacion es Primavera<br> La temperatura es Alta<br> El nivel de humedad es Normal<br> Ultimo escaneo:
+                {{ ultimo_escaneo }}
+            </p>
+            <p>
+                <button class="btn btn-default">Actualizar</button>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
+                width="140" height="140">
+            <h2>Su cultivo esta en riesgo</h2>
+            <p>
+                Debido a las condiciones atmosfericas, su cultivo presenta el riesgo de contener alguna plaga o enfermedad. Porfavor complete
+                el siguiente cuestionario para descartar cualquier riesgo.
+            </p>
+            <a class="btn btn-default" href="/greengarden/cuestionario/">Continuar</a>
+        </div>
+        <div class="col-md-4">
+            <img class="img-circle" src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Generic placeholder image"
+                width="140" height="140">
+            <h2>Con&eacute;ctate</h2>
+            <p>Green garden es un proyecto dirigido por la comunidad.</p>
+            <p>No dudes en consultar tus dudas o aportar con sugerencias en los siguientes enlaces.</p>
+        </div>
     </div>
 </div>
 {% endblock %}

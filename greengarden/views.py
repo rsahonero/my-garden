@@ -7,3 +7,7 @@ def index(request):
         'ultimo_escaneo': timezone.now()
     }
     return render(request, "greengarden/index.html", context)
+
+def cuestionario(request):
+    context = {}
+    return render(request, "greengarden/cuestionario.html", context)
