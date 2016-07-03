@@ -27,7 +27,7 @@ class Hecho(models.Model):
                    reglas.
     """
     valor = models.CharField(max_length=150)
-    titulo = models.CharField(max_length=150, default=None)
+    titulo = models.CharField(max_length=150, default='', blank=True)
     es_meta = models.BooleanField(default=False)
     reglas = models.ManyToManyField(Regla, blank=True)
 
