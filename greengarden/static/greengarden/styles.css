@@ -26,3 +26,7 @@ body > .container {
     margin-bottom: 20px;
     text-align: center;
 }
+
+.cuestionario form {
+	margin-bottom: 10px;
+}
