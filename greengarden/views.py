@@ -1,6 +1,9 @@
 from django.shortcuts import render
-from django.views import generic
+from django.utils import timezone
 
 
-class IndexView(generic.TemplateView):
-    template_name = 'greengarden/index.html'
+def index(request):
+    context = {
+        'ultimo_escaneo': timezone.now()
+    }
+    return render(request, "greengarden/index.html", context)

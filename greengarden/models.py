@@ -21,11 +21,13 @@ class Hecho(models.Model):
     """ Representa las premisas de una regla.
 
     :param valor: cadena de caracteres que representa el valor de la premisa.
+    :param titulo: el valor mostrado al usuario
     :param es_meta: True si el hecho es meta False de otra manera
     :param reglas: campo que representa la relacion de muchos a muchos con las
                    reglas.
     """
     valor = models.CharField(max_length=150)
+    titulo = models.CharField(max_length=150, default=None)
     es_meta = models.BooleanField(default=False)
     reglas = models.ManyToManyField(Regla, blank=True)
 
