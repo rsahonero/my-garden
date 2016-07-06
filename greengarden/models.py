@@ -4,6 +4,14 @@ Modelos de la aplicacion Green Garden.
 from django.db import models
 
 
+CATEGORIAS = {
+    ('N', 'Ninguno'),
+    ('H', 'Hoja'),
+    ('F', 'Flor'),
+    ('T', 'Tallo'),
+    ('R', 'Raiz'),
+}
+
 class Regla(models.Model):
     """ La clase regla forma parte de la base de conocimiento.
 
@@ -29,6 +37,7 @@ class Hecho(models.Model):
     valor = models.CharField(max_length=150)
     titulo = models.CharField(max_length=150, default='', blank=True)
     es_meta = models.BooleanField(default=False)
+    categoria = models.CharField(max_length=1, default='N', choices=CATEGORIAS)
     reglas = models.ManyToManyField(Regla, blank=True)
 
     def __str__(self):

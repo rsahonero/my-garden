@@ -7,58 +7,77 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <form method="POST" action="/">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Hojas</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="checkbox">
-                            <label><input type="checkbox">Hojas arrugadas</label><br>
-                            <label><input type="checkbox">Hojas caidas</label><br>
-                            <label><input type="checkbox">Hojas secas</label><br>
-                            <label><input type="checkbox">Hojas con substancia pegajosa</label><br>
-                            <label><input type="checkbox">Hojas con lineas blancas</label>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab">
+                            <h3 class="panel-title">
+                                <a href="#panel-hojas" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="panel-hojas">Hojas</a>
+                            </h3>
+                        </div>
+                        <div id="panel-hojas" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="panel-hojas">
+                            <div class="panel-body">
+                                <div class="checkbox">
+                                    <label><input type="checkbox">Hojas arrugadas</label><br>
+                                    <label><input type="checkbox">Hojas caidas</label><br>
+                                    <label><input type="checkbox">Hojas secas</label><br>
+                                    <label><input type="checkbox">Hojas con substancia pegajosa</label><br>
+                                    <label><input type="checkbox">Hojas con lineas blancas</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Flores</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="checkbox">
-                            <label><input type="checkbox">Flores caidas</label><br>
-                            <label><input type="checkbox">Flores secas</label><br>
-                            <label><input type="checkbox">Flores con lineas cafes</label><br>
-                            <label><input type="checkbox">Flores decoloradas</label><br>
-                            <label><input type="checkbox">Flores con manchas plateadas</label><br>
-                            <label><input type="checkbox">Flores con manchas cafes</label>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab">
+                            <h3 class="panel-title">
+                                <a href="#panel-flores"  class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-flores">Flores</a>
+                            </h3>
+                        </div>
+                        <div id="panel-flores" class="panel-collapse collapse" role="tabpanel" aria-labelledby="panel-flores">
+                            <div class="panel-body">
+                                <div class="checkbox">
+                                    <label><input type="checkbox">Flores caidas</label><br>
+                                    <label><input type="checkbox">Flores secas</label><br>
+                                    <label><input type="checkbox">Flores con lineas cafes</label><br>
+                                    <label><input type="checkbox">Flores decoloradas</label><br>
+                                    <label><input type="checkbox">Flores con manchas plateadas</label><br>
+                                    <label><input type="checkbox">Flores con manchas cafes</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Tallo</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="checkbox">
-                            <label><input type="checkbox">Tallo quebradizo</label><br>
-                            <label><input type="checkbox">Tallo con lineas cafes</label><br>
-                            <label><input type="checkbox">Tallo con masa densa blanca</label><br>
-                            <label><input type="checkbox">Tallo podrido</label><br>
-                            <label><input type="checkbox">Tallo con manchas plateadas</label>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab">
+                            <h3 class="panel-title">
+                                <a href="#panel-tallo" class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-tallo">Tallo</a>
+                            </h3>
+                        </div>
+                        <div id="panel-tallo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="panel-tallo">
+                            <div class="panel-body">
+                                <div class="checkbox">
+                                    <label><input type="checkbox">Tallo quebradizo</label><br>
+                                    <label><input type="checkbox">Tallo con lineas cafes</label><br>
+                                    <label><input type="checkbox">Tallo con masa densa blanca</label><br>
+                                    <label><input type="checkbox">Tallo podrido</label><br>
+                                    <label><input type="checkbox">Tallo con manchas plateadas</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">Ra&iacute;z</h3>
-                    </div>
-                    <div class="panel-body">
-                        <div class="checkbox">
-                            <label><input type="checkbox">Raiz con nodulos</label><br>
-                            <label><input type="checkbox">Raiz podrida</label>
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab">
+                            <h3 class="panel-title">
+                                <a href="#panel-raiz" class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-raiz">Ra&iacute;z</a>
+                            </h3>
+                        </div>
+                        <div id="panel-raiz" class="panel-collapse collapse" role="tabpanel" aria-labelledby="panel-raiz">
+                            <div class="panel-body">
+                                <div class="checkbox">
+                                    <label><input type="checkbox">Raiz con nodulos</label><br>
+                                    <label><input type="checkbox">Raiz podrida</label>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
