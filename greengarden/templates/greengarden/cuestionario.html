@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block content %}
 <div class="cuestionario">
     <div class="row">
         <div class="col-md-12">
@@ -7,7 +9,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <form method="POST" action="{% url 'greengarden:inferir' %}">
+            <form id="form-cuestionario" method="POST" action="{% url 'greengarden:inferir' %}">
                 {% csrf_token %}
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
@@ -84,16 +86,13 @@
                     <h3 class="panel-title">Memoria</h3>
                 </div>
                 <ul id="memoria" class="list-group">
-                    <li class="list-group-item">Manchas amarillas</li>
-                    <li class="list-group-item">Hojas caidas</li>
-                    <li class="list-group-item">Tallo quebradizo</li>
-                    <li class="list-group-item">Hojas con manchas amarillas</li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
-{% endblock content %} {% block footer %}
+{% endblock content %}
+{% block footer %}
 <div class="cuestionario">
     <footer class="footer">
         <div class="container">
@@ -102,3 +101,6 @@
     </footer>
 </div>
 {% endblock footer %}
+{% block scripts %}
+<script src="{% static 'greengarden/cuestionario/cuestionario.js' %}"></script>
+{% endblock scripts %}
