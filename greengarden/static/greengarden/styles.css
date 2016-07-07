@@ -30,3 +30,7 @@ body > .container {
 .cuestionario form {
 	margin-bottom: 10px;
 }
+
+.cuestionario form .checkbox {
+    margin: 0;
+}
