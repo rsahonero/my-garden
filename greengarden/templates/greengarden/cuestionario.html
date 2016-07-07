@@ -7,7 +7,7 @@
     </div>
     <div class="row">
         <div class="col-md-8">
-            <form method="POST" action="">
+            <form method="POST" action="{% url 'greengarden:inferir' %}">
                 {% csrf_token %}
                 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                     <div class="panel panel-default">
@@ -83,7 +83,7 @@
                 <div class="panel-heading">
                     <h3 class="panel-title">Memoria</h3>
                 </div>
-                <ul class="list-group">
+                <ul id="memoria" class="list-group">
                     <li class="list-group-item">Manchas amarillas</li>
                     <li class="list-group-item">Hojas caidas</li>
                     <li class="list-group-item">Tallo quebradizo</li>
@@ -93,4 +93,12 @@
         </div>
     </div>
 </div>
-{% endblock %}
+{% endblock content %} {% block footer %}
+<div class="cuestionario">
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">&copy; 2016 Rosario Sahonero</p>
+        </div>
+    </footer>
+</div>
+{% endblock footer %}

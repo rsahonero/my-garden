@@ -34,3 +34,7 @@ body > .container {
 .cuestionario form .checkbox {
     margin: 0;
 }
+
+.cuestionario .footer {
+    position: absolute;
+}
