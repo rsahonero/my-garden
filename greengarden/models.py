@@ -42,3 +42,16 @@ class Hecho(models.Model):
 
     def __str__(self):
         return self.valor
+
+class Detalle(models.Model):
+    hecho = models.OneToOneField(
+        Hecho,
+        on_delete=models.CASCADE,
+        primary_key=True,
+    )
+    imagen = models.CharField(max_length=100)
+    descripcion = models.CharField(max_length=250)
+    tratamiento = models.CharField(max_length=250)
+
+    def __str__(self):
+        return self.hecho.valor

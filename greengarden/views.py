@@ -33,5 +33,6 @@ def inferir(request):
         hechos_ids = request.POST.getlist('hechos')
         for hecho_id in hechos_ids:
             memoria.HECHOS.append(Hecho.objects.get(id=hecho_id))
-        #motor_inferencia.inferir()
+        motor_inferencia.inferir()
+        memoria.HECHOS = []
     return HttpResponseRedirect(reverse('greengarden:index'))
