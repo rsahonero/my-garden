@@ -1,6 +1,4 @@
-{% extends "base.html" %}
-{% load staticfiles %}
-{% block content %}
+{% extends "base.html" %} {% load staticfiles %} {% block content %}
 <div class="cuestionario">
     <div class="row">
         <div class="col-md-12">
@@ -21,9 +19,7 @@
                         <div id="panel-hojas" class="checkbox panel-collapse collapse in" role="tabpanel" aria-labelledby="panel-hojas">
                             <ul class="list-group">
                                 {% for hecho in hechos_hojas %}
-                                <li class="list-group-item">
-                                    <label><input type="checkbox" name="hechos" value={{hecho.id}}>{{ hecho.titulo }}</label>
-                                </li>
+                                    {% include 'greengarden/cuestionario_item.html' %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -37,9 +33,7 @@
                         <div id="panel-flores" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-flores">
                             <ul class="list-group">
                                 {% for hecho in hechos_flores %}
-                                <li class="list-group-item">
-                                    <label><input type="checkbox" name="hechos" value={{hecho.id}}>{{ hecho.titulo }}</label>
-                                </li>
+                                    {% include 'greengarden/cuestionario_item.html' %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -53,9 +47,7 @@
                         <div id="panel-tallo" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-tallo">
                             <ul class="list-group">
                                 {% for hecho in hechos_tallo %}
-                                <li class="list-group-item">
-                                    <label><input type="checkbox" name="hechos" value={{hecho.id}}>{{ hecho.titulo }}</label>
-                                </li>
+                                    {% include 'greengarden/cuestionario_item.html' %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -69,9 +61,7 @@
                         <div id="panel-raiz" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-raiz">
                             <ul class="list-group">
                                 {% for hecho in hechos_raiz %}
-                                <li class="list-group-item">
-                                    <label><input type="checkbox" name="hechos" value={{hecho.id}}>{{ hecho.titulo }}</label>
-                                </li>
+                                    {% include 'greengarden/cuestionario_item.html' %}
                                 {% endfor %}
                             </ul>
                         </div>
@@ -91,8 +81,7 @@
         </div>
     </div>
 </div>
-{% endblock content %}
-{% block footer %}
+{% endblock content %} {% block footer %}
 <div class="cuestionario">
     <footer class="footer">
         <div class="container">
@@ -100,7 +89,5 @@
         </div>
     </footer>
 </div>
-{% endblock footer %}
-{% block scripts %}
-<script src="{% static 'greengarden/cuestionario/cuestionario.js' %}"></script>
-{% endblock scripts %}
+{% endblock footer %} {% block scripts %}
+<script src="{% static 'greengarden/cuestionario/cuestionario.js' %}"></script> {% endblock scripts %}

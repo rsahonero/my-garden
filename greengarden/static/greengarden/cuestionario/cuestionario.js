@@ -14,4 +14,12 @@
             }
         });
     });
+
+    $('.navbar-nav li').each(function () {
+        if ($(this).children().text() === 'Cuestionario') {
+            $(this).addClass('active');
+        } else {
+            $(this).removeClass('active');
+        }
+    });
 })();

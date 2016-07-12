@@ -51,7 +51,7 @@ class Detalle(models.Model):
     )
     imagen = models.CharField(max_length=100)
     descripcion = models.CharField(max_length=250)
-    tratamiento = models.CharField(max_length=250)
+    tratamiento = models.CharField(max_length=250, blank=True)
 
     def __str__(self):
         return self.hecho.valor

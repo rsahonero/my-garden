@@ -35,6 +35,30 @@ body > .container {
     margin: 0;
 }
 
+.cuestionario .list-group-item .contenedor-item {
+    display: inline-block;
+    width: 100%;
+}
+
+.cuestionario .list-group-item .contenedor-item .descripcion {
+    width: 90%;
+    float: left;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle {
+    width: 10%;
+    float: right;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle span {
+    float: right;
+    padding-top: 5px;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle:hover {
+    cursor: pointer;
+}
+
 .cuestionario .footer {
     position: absolute;
 }

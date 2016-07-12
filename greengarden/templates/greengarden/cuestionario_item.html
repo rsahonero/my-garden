@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<li class="list-group-item">
+    <div class="contenedor-item">
+        <div class="descripcion">
+            <label><input type="checkbox" name="hechos" value={{hecho.id}}>{{ hecho.titulo }}</label>
+        </div>
+        <div class="detalle" data-toggle="modal" data-target="#modal-{{hecho.id}}">
+            <span class="glyphicon glyphicon-leaf"></span>
+        </div>
+    </div>
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal-{{hecho.id}}">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">{{hecho.titulo}}</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <img src="{% static 'greengarden/imagenes/caida_de_hojas.jpg' %}" class="img-responsive img-rounded">
+                        </div>
+                        <div class="col-md-5">
+                            <div class="detalle-descripcion">
+                                <p>{{hecho.detalle.descripcion}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
