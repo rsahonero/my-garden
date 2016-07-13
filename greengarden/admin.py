@@ -2,16 +2,20 @@ from django.contrib import admin
 
 from .models import Hecho, Regla, Detalle
 
-class ReglaAdmin(admin.ModelAdmin):
-    model = Regla
+class HechoReglasInline(admin.TabularInline):
+    model = Hecho.reglas.through
 
+class ReglaAdmin(admin.ModelAdmin):
+    inlines = [
+        HechoReglasInline,
+    ]
 
 class HechoAdmin(admin.ModelAdmin):
-    model = Hecho
+    inlines = [
+        HechoReglasInline,
+    ]
+    exclude = ('reglas',)
 
-class DetalleAdmin(admin.ModelAdmin):
-    model = Detalle
-
-admin.site.register(Hecho)
-admin.site.register(Regla)
+admin.site.register(Hecho, HechoAdmin)
+admin.site.register(Regla, ReglaAdmin)
 admin.site.register(Detalle)
