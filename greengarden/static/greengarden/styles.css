@@ -1,0 +1,64 @@
+body > .container {
+    padding: 60px 15px 0;
+}
+
+.footer {
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background-color: #F5F5F5;
+}
+
+.footer > .container {
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
+.container .text-muted {
+    margin: 20px 0;
+}
+
+.home .marketing h2 {
+    font-weight: normal;
+}
+
+.home .marketing .col-md-4 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.cuestionario form {
+	margin-bottom: 10px;
+}
+
+.cuestionario form .checkbox {
+    margin: 0;
+}
+
+.cuestionario .list-group-item .contenedor-item {
+    display: inline-block;
+    width: 100%;
+}
+
+.cuestionario .list-group-item .contenedor-item .descripcion {
+    width: 90%;
+    float: left;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle {
+    width: 10%;
+    float: right;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle span {
+    float: right;
+    padding-top: 5px;
+}
+
+.cuestionario .list-group-item .contenedor-item .detalle:hover {
+    cursor: pointer;
+}
+
+.cuestionario .footer, .conclusion .footer {
+    position: absolute;
+}
