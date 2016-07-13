@@ -17,11 +17,11 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-7">
-                            <img src="{% static 'greengarden/imagenes/caida_de_hojas.jpg' %}" class="img-responsive img-rounded">
+                            <img src="/static/greengarden/imagenes/{{ hecho.detalle.imagen }}" class="img-responsive img-rounded">
                         </div>
                         <div class="col-md-5">
                             <div class="detalle-descripcion">
-                                <p>{{hecho.detalle.descripcion}}</p>
+                                <p>{{ hecho.detalle.descripcion }}</p>
                             </div>
                         </div>
                     </div>

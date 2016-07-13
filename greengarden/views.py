@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Hecho
+from .models import Detalle, Hecho
 from .inferencia import memoria, motor
 
 
@@ -20,19 +20,29 @@ def cuestionario(request):
     hechos_flores = Hecho.objects.filter(categoria='F')
     hechos_tallo = Hecho.objects.filter(categoria='T')
     hechos_raiz = Hecho.objects.filter(categoria='R')
-    context = {
+    contexto = {
         'hechos_hojas': hechos_hojas,
         'hechos_flores': hechos_flores,
         'hechos_tallo': hechos_tallo,
         'hechos_raiz': hechos_raiz
     }
-    return render(request, "greengarden/cuestionario.html", context)
+    return render(request, "greengarden/cuestionario.html", contexto)
 
 def inferir(request):
+    respuesta = False
     if request.method == 'POST':
         hechos_ids = request.POST.getlist('hechos')
         for hecho_id in hechos_ids:
             memoria.HECHOS.append(Hecho.objects.get(id=hecho_id))
-        motor_inferencia.inferir()
-        memoria.HECHOS = []
+        if motor_inferencia.inferir():
+            hecho_id = memoria.HECHOS[-1].id
+            memoria.HECHOS = []
+            return HttpResponseRedirect(reverse('greengarden:conclusion', args=(hecho_id,)))
     return HttpResponseRedirect(reverse('greengarden:index'))
+
+def conclusion(request, hecho_id):
+    detalle = Detalle.objects.get(pk=hecho_id)
+    contexto = {
+        'detalle': detalle
+    }
+    return render(request, "greengarden/conclusion.html", contexto)
