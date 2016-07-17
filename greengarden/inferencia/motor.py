@@ -87,3 +87,6 @@ class Motor():
         :param conclusion: la conclusion a ser agregada.
         """
         self._memoria_trabajo.insertar_hecho(conclusion)
+
+    def reiniciar_reglas_activadas(self):
+        self._reglas_activadas = []
