@@ -3,7 +3,7 @@ from celery.decorators import periodic_task
 from celery.utils.log import get_task_logger
 from celery import shared_task
 
-from .models import Hecho
+from .models import Hecho, CondicionAtmosferica
 from .inferencia import motor, memoria
 
 logger = get_task_logger(__name__)
@@ -24,25 +24,31 @@ def task_monitorizar_condiciones_atmosfericas():
     hecho_estacion = None
 
     if temperatura <= 15:
-        hecho_temperatura = Hecho.objects.filter(valor='menor_15_grados')
+        hecho_temperatura = Hecho.objects.filter(valor='temperatura_baja')
     elif temperatura > 15 and temperatura <= 25:
-        hecho_temperatura = Hecho.objects.filter(valor='entre_16_24_grados')
+        hecho_temperatura = Hecho.objects.filter(valor='temperatura_media')
     else:
-        hecho_temperatura = Hecho.objects.filter(valor='mayor_25_grados')
+        hecho_temperatura = Hecho.objects.filter(valor='temperatura_alta')
 
     if humedad <= 33:
-        hecho_humedad = Hecho.objects.filter(valor='menor_33_porciento')
+        hecho_humedad = Hecho.objects.filter(valor='humedad_baja')
     elif humedad > 33 and humedad <= 66:
-        hecho_humedad = Hecho.objects.filter(valor='entre_34_66_porciento')
+        hecho_humedad = Hecho.objects.filter(valor='humedad_media')
     else:
-        hecho_humedad = Hecho.objects.filter(valor='mayor_66_porciento')
+        hecho_humedad = Hecho.objects.filter(valor='humedad_alta')
 
     hecho_estacion = Hecho.objects.filter(valor=mes.lower())
+    memoria_trabajo.insertar_hecho(hecho_estacion[0])
+    motor_inferencia.inferir()
 
-    memoria_trabajo.reiniciar_hechos_compartidos()
-    memoria_trabajo.insertar_hecho_compartido(hecho_temperatura[0])
-    memoria_trabajo.insertar_hecho_compartido(hecho_humedad[0])
-    memoria_trabajo.insertar_hecho_compartido(hecho_estacion[0])
+    condiciones_atmosfericas = CondicionAtmosferica.objects.get(pk=1)
+    condiciones_atmosfericas.temperatura = hecho_temperatura[0].id
+    condiciones_atmosfericas.humedad = hecho_humedad[0].id
+    condiciones_atmosfericas.estacion = memoria_trabajo.obtener_hechos()[-1].id
+
+    condiciones_atmosfericas.save()
+    memoria_trabajo.reiniciar_hechos()
+    motor_inferencia.reiniciar_reglas_activadas()
 
     logger.info("Monitorizacion completada")
     return True

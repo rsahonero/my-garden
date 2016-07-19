@@ -6,12 +6,19 @@ from django.utils import timezone
 from celery.result import AsyncResult
 
 from .tasks import task_inferir
-from .models import Detalle, Hecho
+from .models import Detalle, Hecho, CondicionAtmosferica
 from .inferencia import memoria, motor
 
 def index(request):
+    condiciones_atmosfericas = CondicionAtmosferica.objects.get(pk=1)
+    temperatura = Hecho.objects.get(pk=condiciones_atmosfericas.temperatura)
+    humedad = Hecho.objects.get(pk=condiciones_atmosfericas.humedad)
+    estacion = Hecho.objects.get(pk=condiciones_atmosfericas.estacion)
     context = {
-        'ultimo_escaneo': timezone.now()
+        'temperatura': temperatura,
+        'humedad': humedad,
+        'estacion': estacion,
+        'ultimo_escaneo': condiciones_atmosfericas.ultima_actualizacion
     }
     return render(request, "greengarden/index.html", context)
 

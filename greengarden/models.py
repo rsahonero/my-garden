@@ -55,3 +55,9 @@ class Detalle(models.Model):
 
     def __str__(self):
         return self.hecho.valor
+
+class CondicionAtmosferica(models.Model):
+    temperatura = models.IntegerField()
+    humedad = models.IntegerField()
+    estacion = models.IntegerField()
+    ultima_actualizacion = models.DateTimeField(auto_now=True)
