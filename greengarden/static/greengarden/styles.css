@@ -27,6 +27,10 @@ body > .container {
     text-align: center;
 }
 
+.home .alert {
+    display: none;
+}
+
 .cuestionario form {
 	margin-bottom: 10px;
 }
@@ -59,6 +63,10 @@ body > .container {
     cursor: pointer;
 }
 
-.cuestionario .footer, .conclusion .footer {
+.cuestionario .footer {
+    display: none;
+}
+
+.conclusion .footer {
     position: absolute;
 }

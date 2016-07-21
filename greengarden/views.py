@@ -1,17 +1,25 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Detalle, Hecho
+from celery.result import AsyncResult
+
+from .tasks import task_inferir
+from .models import Detalle, Hecho, CondicionAtmosferica
 from .inferencia import memoria, motor
 
-
-motor_inferencia = motor.Motor()
-
 def index(request):
+    condiciones_atmosfericas = CondicionAtmosferica.objects.get(pk=1)
+    temperatura = Hecho.objects.get(pk=condiciones_atmosfericas.temperatura)
+    humedad = Hecho.objects.get(pk=condiciones_atmosfericas.humedad)
+    estacion = Hecho.objects.get(pk=condiciones_atmosfericas.estacion)
     context = {
-        'ultimo_escaneo': timezone.now()
+        'temperatura': temperatura,
+        'humedad': humedad,
+        'estacion': estacion,
+        'ultimo_escaneo': condiciones_atmosfericas.ultima_actualizacion
     }
     return render(request, "greengarden/index.html", context)
 
@@ -29,20 +37,29 @@ def cuestionario(request):
     return render(request, "greengarden/cuestionario.html", contexto)
 
 def inferir(request):
-    respuesta = False
     if request.method == 'POST':
         hechos_ids = request.POST.getlist('hechos')
-        for hecho_id in hechos_ids:
-            memoria.HECHOS.append(Hecho.objects.get(id=hecho_id))
-        if motor_inferencia.inferir():
-            hecho_id = memoria.HECHOS[-1].id
-            memoria.HECHOS = []
-            return HttpResponseRedirect(reverse('greengarden:conclusion', args=(hecho_id,)))
+        result = task_inferir.delay(hechos_ids)
+        return HttpResponseRedirect(reverse('greengarden:conclusion', args=(result.task_id,)))
     return HttpResponseRedirect(reverse('greengarden:index'))
 
-def conclusion(request, hecho_id):
-    detalle = Detalle.objects.get(pk=hecho_id)
-    contexto = {
-        'detalle': detalle
-    }
-    return render(request, "greengarden/conclusion.html", contexto)
+def conclusion(request, task_id):
+    result = AsyncResult(task_id)
+    result.wait(1, True, 0.5, True, True)
+    if result.ready():
+        if result.successful():
+            detalle = Detalle.objects.get(pk=result.result)
+            contexto = {
+                'detalle': detalle
+            }
+            return render(request, "greengarden/conclusion.html", contexto)
+        else:
+            print("No result")
+    else:
+        print("The result is not ready")
+
+def actualizar(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'tiempo_actual': str(timezone.now())
+        })
