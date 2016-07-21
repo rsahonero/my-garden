@@ -1,5 +1,6 @@
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -56,3 +57,9 @@ def conclusion(request, task_id):
             print("No result")
     else:
         print("The result is not ready")
+
+def actualizar(request):
+    if request.method == 'GET':
+        return JsonResponse({
+            'tiempo_actual': str(timezone.now())
+        })
