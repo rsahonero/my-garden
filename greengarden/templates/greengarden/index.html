@@ -1,0 +1,54 @@
+{% extends "base.html" %} {% load staticfiles %} {% block content %}
+<div class="home">
+    <div class="alert alert-info alert-dismisable fade in" role="alert" id="info-actualizacion">
+        <button class="close" type="button" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        Ultimo escaneo realizado a las 12:30 p.m. el siguiente escaneo esta programado para las 12:30 a.m.
+    </div>
+    <div class="jumbotron">
+        <div class="container">
+            <p>
+                Bienvenido a <strong>Green Garden</strong> un sistema experto para los amantes de la floricultura.
+            </p>
+            <p>
+                Su funcionalidad es ayudarte en la monitorizaci&oacute;n y control de plagas y enfermedades en tus cultivos de flores y rosas.
+            </p>
+        </div>
+    </div>
+    <div class="row marketing">
+        <div class="col-md-4">
+            <img class="img-circle" src="{% static 'greengarden/imagenes/condiciones_atmosfericas.jpg' %}" alt="Generic placeholder image"
+                width="140" height="140">
+            <h2>Condiciones Atmosf&eacute;ricas</h2>
+            <p>
+                La estacion es {{ estacion.titulo }}<br> {{ temperatura.titulo }}<br> {{ humedad.titulo }}<br> Ultimo escaneo:
+                {{ ultimo_escaneo }}
+            </p>
+            <p>
+                <form action="" id="condiciones-atmosfericas">
+                    <input type="submit" class="btn btn-default" value="Actualizar">
+                </form>
+            </p>
+        </div>
+        <div class="col-md-4">
+            <img class="img-circle" src="{% static 'greengarden/imagenes/estado_cultivo.jpg' %}" alt="Generic placeholder image" width="140"
+                height="140">
+            <h2>Su cultivo esta en riesgo</h2>
+            <p>
+                Debido a las condiciones atmosfericas, su cultivo presenta el riesgo de contener alguna plaga o enfermedad. Porfavor complete
+                el siguiente cuestionario para descartar cualquier riesgo.
+            </p>
+            <a class="btn btn-default" href="/greengarden/cuestionario/">Continuar</a>
+        </div>
+        <div class="col-md-4">
+            <img class="img-circle" src="{% static 'greengarden/imagenes/social_media.jpg' %}" alt="Generic placeholder image" width="140"
+                height="140">
+            <h2>Con&eacute;ctate</h2>
+            <p>Green Garden es un proyecto dirigido por la comunidad.</p>
+            <p>No dudes en consultar tus dudas o aportar con sugerencias en los siguientes enlaces.</p>
+        </div>
+    </div>
+</div>
+{% endblock %} {% block scripts %}
+<script src="{% static 'greengarden/index/index.js' %}"></script> {% endblock scripts %}

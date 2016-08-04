@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% load staticfiles %} {% block content %}
+<div class="conclusion">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ detalle.hecho.titulo }}</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/static/greengarden/imagenes/{{ detalle.imagen }}" class="img-responsive img-rounded">
+        </div>
+        <div class="col-md-8">
+            <p>{{ detalle.descripcion }}</p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Tratamiento</h3>
+            <p>{{ detalle.tratamiento }}</p>
+        </div>
+    </div>
+</div>
+{% endblock content %} {% block footer %}
+<div class="conclusion">
+    <footer class="footer">
+        <div class="container">
+            <p class="text-muted">&copy; 2016 Rosario Sahonero</p>
+        </div>
+    </footer>
+</div>
+{% endblock footer %} {% block scripts %}
+<script src="{% static 'greengarden/conclusion/conclusion.js' %}"></script> {% endblock scripts %}
