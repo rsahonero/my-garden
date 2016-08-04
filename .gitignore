@@ -3,6 +3,8 @@
 *.png
 *.jpg
 *.db
+*.rdb
 
 .project
 .pydevproject
+.settings

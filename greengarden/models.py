@@ -12,6 +12,7 @@ CATEGORIAS = {
     ('R', 'Raiz'),
 }
 
+
 class Regla(models.Model):
     """ La clase regla forma parte de la base de conocimiento.
 
@@ -20,10 +21,12 @@ class Regla(models.Model):
                        trabajo.
     """
     titulo = models.CharField(max_length=150)
-    conclusion = models.ForeignKey('Hecho', default=None, null=True, blank=True)
+    conclusion = models.ForeignKey(
+                    'Hecho', default=None, null=True, blank=True)
 
     def __str__(self):
         return self.titulo
+
 
 class Hecho(models.Model):
     """ Representa las premisas de una regla.
@@ -43,6 +46,7 @@ class Hecho(models.Model):
     def __str__(self):
         return self.valor
 
+
 class Detalle(models.Model):
     hecho = models.OneToOneField(
         Hecho,
@@ -55,6 +59,7 @@ class Detalle(models.Model):
 
     def __str__(self):
         return self.hecho.valor
+
 
 class CondicionAtmosferica(models.Model):
     temperatura = models.IntegerField()

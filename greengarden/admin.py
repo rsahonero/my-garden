@@ -2,13 +2,16 @@ from django.contrib import admin
 
 from .models import Hecho, Regla, Detalle, CondicionAtmosferica
 
+
 class HechoReglasInline(admin.TabularInline):
-    model = Hecho.reglas.through
+    model = Hecho.reglas.through  # @UndefinedVariable
+
 
 class ReglaAdmin(admin.ModelAdmin):
     inlines = [
         HechoReglasInline,
     ]
+
 
 class HechoAdmin(admin.ModelAdmin):
     inlines = [

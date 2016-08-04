@@ -1,6 +1,8 @@
 """
 Contiene una clase estatica cuyo fin es almacenar de forma temporal los hechos.
 """
+
+
 class Memoria():
     def __init__(self):
         self._hechos = []

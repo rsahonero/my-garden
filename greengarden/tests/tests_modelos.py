@@ -31,6 +31,7 @@ class HechoTests(TestCase):
         with self.assertRaises(ValidationError):
             hecho.clean_fields()
 
+
 class ReglaTests(TestCase):
     def setUp(self):
         Hecho.objects.create(valor='hecho1')
