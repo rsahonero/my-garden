@@ -1,5 +1,5 @@
-from celery.task.schedules import crontab
-from celery.decorators import periodic_task
+from celery.task.schedules import crontab  # @UnresolvedImport
+from celery.decorators import periodic_task  # @UnresolvedImport
 from celery.utils.log import get_task_logger
 from celery import shared_task
 
@@ -9,6 +9,7 @@ from .inferencia import motor, memoria
 logger = get_task_logger(__name__)
 memoria_trabajo = memoria.Memoria()
 motor_inferencia = motor.Motor(memoria_trabajo)
+
 
 @periodic_task(
     run_every=(crontab(minute='*/2')),
@@ -21,7 +22,6 @@ def task_monitorizar_condiciones_atmosfericas():
     mes = 'Octubre'
     hecho_temperatura = None
     hecho_humedad = None
-    hecho_estacion = None
 
     if temperatura <= 15:
         hecho_temperatura = Hecho.objects.filter(valor='temperatura_baja')
@@ -52,6 +52,7 @@ def task_monitorizar_condiciones_atmosfericas():
 
     logger.info("Monitorizacion completada")
     return True
+
 
 @shared_task
 def task_inferir(parameter_list):

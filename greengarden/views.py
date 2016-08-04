@@ -8,7 +8,7 @@ from celery.result import AsyncResult
 
 from .tasks import task_inferir
 from .models import Detalle, Hecho, CondicionAtmosferica
-from .inferencia import memoria, motor
+
 
 def index(request):
     condiciones_atmosfericas = CondicionAtmosferica.objects.get(pk=1)
@@ -23,6 +23,7 @@ def index(request):
     }
     return render(request, "greengarden/index.html", context)
 
+
 def cuestionario(request):
     hechos_hojas = Hecho.objects.filter(categoria='H')
     hechos_flores = Hecho.objects.filter(categoria='F')
@@ -36,12 +37,15 @@ def cuestionario(request):
     }
     return render(request, "greengarden/cuestionario.html", contexto)
 
+
 def inferir(request):
     if request.method == 'POST':
         hechos_ids = request.POST.getlist('hechos')
-        result = task_inferir.delay(hechos_ids)
-        return HttpResponseRedirect(reverse('greengarden:conclusion', args=(result.task_id,)))
+        result = task_inferir.delay(hechos_ids)  # @UndefinedVariable
+        return HttpResponseRedirect(
+                reverse('greengarden:conclusion', args=(result.task_id,)))
     return HttpResponseRedirect(reverse('greengarden:index'))
+
 
 def conclusion(request, task_id):
     result = AsyncResult(task_id)
@@ -57,6 +61,7 @@ def conclusion(request, task_id):
             print("No result")
     else:
         print("The result is not ready")
+
 
 def actualizar(request):
     if request.method == 'GET':

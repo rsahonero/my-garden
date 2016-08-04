@@ -21,6 +21,7 @@ class MemoriaTests(TestCase):
         memoria_trabajo.insertar_hecho(hecho)
         self.assertTrue(len(memoria_trabajo.obtener_hechos()) > 0)
 
+
 class MotorTests(TestCase):
     def setUp(self):
         Hecho.objects.create(valor='A')
@@ -83,4 +84,3 @@ class MotorTests(TestCase):
         motor_inferencia = motor.Motor(memoria_trabajo)
         self.assertTrue(motor_inferencia.inferir())
         self.assertEqual('H', memoria_trabajo.obtener_hechos()[-1].valor)
-
