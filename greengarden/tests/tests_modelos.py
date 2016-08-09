@@ -1,81 +1,114 @@
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 
-from ..models import Hecho, Regla
+from ..models import CondicionAtmosferica, Detalle, Hecho, Regla
 
 
 class HechoTests(TestCase):
     def setUp(self):
-        Hecho.objects.create(valor='test')
+        Hecho.objects.create(valor=None)
 
-    def test_valor_no_es_nulo(self):
+    def test_valor_es_nulo(self):
         """
-        El valor de un hecho no debe ser nulo
+        El valor de un hecho puede ser desconocido
         """
         hecho = Hecho.objects.get(pk=1)
-        self.assertIsNotNone(hecho.valor)
+        self.assertIsNone(hecho.valor)
 
-    def test_valor_es_texto(self):
+    def test_valor_es_verdadero(self):
         """
-        El valor de un hecho debe ser una cadena de caracteres
+        El valor de un hecho puede ser verdadero
         """
         hecho = Hecho.objects.get(pk=1)
-        self.assertTrue(isinstance(hecho.valor, str))
+        hecho.valor = True
+        self.assertTrue(hecho.valor)
 
-    def test_valor_no_supera_los_ciento_cincuenta_caracteres(self):
+    def test_valor_es_falso(self):
         """
-        La longitud maxima de caracteres no debe ser mayor a 150
+        El valor de un hecho puede ser falso
         """
         hecho = Hecho.objects.get(pk=1)
-        hecho.valor = 'asd' * 55
-        with self.assertRaises(ValidationError):
-            hecho.clean_fields()
+        hecho.valor = False
+        self.assertFalse(hecho.valor)
+
+    def test_titulo_es_vacio(self):
+        """
+        El titulo de un hecho puede ser vacio
+        """
+        hecho = Hecho.objects.get(pk=1)
+        self.assertEqual(hecho.titulo, '')
+
+    def test_categoria_valor_defecto(self):
+        """
+        El hecho tiene una categoria cuyo valor por defecto
+        es N
+        """
+        hecho = Hecho.objects.get(pk=1)
+        self.assertEqual(hecho.categoria, 'N')
 
 
 class ReglaTests(TestCase):
     def setUp(self):
-        Hecho.objects.create(valor='hecho1')
-        Hecho.objects.create(valor='hecho2')
-        Regla.objects.create(
-            titulo='regla1',
-            conclusion=Hecho.objects.get(pk=2)
-        )
+        Regla.objects.create(titulo='regla_1')
 
-    def test_titulo_no_es_nulo(self):
+    def test_titulo_no_nulo(self):
         """
-        El titulo de una regla no debe ser nulo
+        La regla debe tener un titulo
         """
         regla = Regla.objects.get(pk=1)
-        self.assertIsNotNone(regla.titulo)
+        self.assertEqual(regla.titulo, 'regla_1')
 
-    def test_titulo_es_texto(self):
-        """
-        El titulo de una regla debe ser una cadena de caracteres
-        """
-        regla = Regla.objects.get(pk=1)
-        self.assertTrue(isinstance(regla.titulo, str))
 
-    def test_titulo_no_supera_los_ciento_cincuenta_caracteres(self):
-        """
-        El titulo de la regla no debe superar los 150 caracteres
-        """
-        regla = Regla.objects.get(pk=1)
-        regla.titulo = 'asd' * 55
-        with self.assertRaises(ValidationError):
-            regla.clean_fields()
+class DetalleTests(TestCase):
+    def setUp(self):
+        Hecho.objects.create(titulo='hecho')
+        Detalle.objects.create(
+            hecho=Hecho.objects.get(pk=1),
+            imagen='imagen.jpg',
+            descripcion='test',
+            tratamiento='')
 
-    def test_tiene_una_lista_de_echos(self):
+    def test_hecho_no_nulo(self):
         """
-        Las reglas deberian tener una lista de hechos
+        Los detalles deberian estar relacionados a un hecho
         """
-        regla = Regla.objects.get(pk=1)
-        hecho = Hecho.objects.get(pk=1)
-        hecho.reglas.add(regla)
-        self.assertTrue(len(regla.hecho_set.all()) == 1)
+        hecho = Detalle.objects.get(pk=1)
+        self.assertIsNotNone(hecho)
 
-    def test_tiene_una_conclusion(self):
+    def test_imagen_no_nulo(self):
         """
-        Las reglas deberian tener solo una conclusion
+        Los detalles deben tener una referencia a una imagen
         """
-        regla = Regla.objects.get(pk=1)
-        self.assertIsNotNone(regla.conclusion)
+        detalle = Detalle.objects.get(pk=1)
+        self.assertEqual(detalle.imagen, 'imagen.jpg')
+
+    def test_descripcion_no_nulo(self):
+        """
+        Los detalles deben tener una descripcion
+        """
+        detalle = Detalle.objects.get(pk=1)
+        self.assertEqual(detalle.descripcion, 'test')
+
+    def test_tratamiento_es_vacio(self):
+        """
+        El valor del tratamiento puede ser vacio
+        """
+        detalle = Detalle.objects.get(pk=1)
+        self.assertEqual(detalle.tratamiento, '')
+
+
+class CondicionAtmosfericaTests(TestCase):
+    def setUp(self):
+        CondicionAtmosferica.objects.create(
+            temperatura=1,
+            humedad=2,
+            estacion=3)
+
+    def test_condiciones_atmosfericas(self):
+        """
+        Las condiciones atmosfericas deberan tener los valores de humedad,
+        temperatura y estacion distintos de 0
+        """
+        condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
+        self.assertTrue(condicion_atmosferica.temperatura > 0)
+        self.assertTrue(condicion_atmosferica.humedad > 0)
+        self.assertTrue(condicion_atmosferica.estacion > 0)
