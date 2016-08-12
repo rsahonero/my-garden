@@ -8,7 +8,7 @@ from .inferencia import motor, memoria
 
 logger = get_task_logger(__name__)
 memoria_trabajo = memoria.Memoria()
-motor_inferencia = motor.Motor(memoria_trabajo)
+motor_inferencia = motor.Motor()
 
 
 @periodic_task(

@@ -11,82 +11,169 @@ class Motor():
     El motor de inferencia emplea el algoritmo de encadenamiento hacia adelante
     para hallar una conclusion o meta.
     """
-    def __init__(self, memoria_trabajo):
+    def __init__(self):
         """
         Crea una instancia del motor de inferencia
-
-        :param _reglas_activadas: lista de reglas que fueron activadas.
         """
-        self._reglas_activadas = []
-        self._memoria_trabajo = memoria_trabajo
+        self._hechos_marcados = []
+        self._objetivo_en_curso = None
+        self._objetivo_inicial = None
+        self._objetivos_previos = None
+        self._reglas_activas = None
+        self._reglas_inactivas = []
 
-    def inferir(self):
+    def asignar_valores_conocidos(self, hechos_conocidos):
         """
-        La inferencia es un proceso recursivo que examina regla por regla hasta
-        hallar una meta o hasta que se agoten las reglas.
+        Etapa 1.1: Asigna a los objetos sus valores conocidos
+        :param hechos_conocidos:
+        """
+        for k, v in hechos_conocidos.items():
+            k.valor = v
+            k.save()
+            self._hechos_marcados.append(k)
 
-        :return True: cuando un estado meta es alcanzado.
-        :return False: cuando no se ha podido inferir un resultado.
+    def cargar_objetivo_en_curso(self, hecho):
         """
-        for regla in Regla.objects.all():
-            if self.regla_esta_activada(regla) is False:
-                if self.emparejar_regla(regla):
-                    self._reglas_activadas.append(regla)
-                    self.agregar_conclusion(regla.conclusion)
-                    if regla.conclusion.es_meta:
-                        return True
-                    else:
-                        return self.inferir()
-        return False
+        Etapa 1.2: Carga el objetivo en curso
+        :param hecho: El nuevo objetivo en curso
+        """
+        self._objetivo_en_curso = hecho
 
-    def regla_esta_activada(self, regla):
+    def verificar_objetivo(self):
         """
-        Determina si una regla esta activada examinando la lista de reglas
-        activadas.
+        Etapa 1.3: Verifica si el objetivo esta marcado
+        :return: True si el objetivo en curso esta marcado
+        """
+        return self._objetivo_en_curso in self._hechos_marcados
 
-        :param regla: la regla que sera examinada.
-        :return True: si la regla esta activada.
-        :return False: si la regla no fue activada.
+    def cargar_objetivos(self):
         """
-        for regla_activada in self._reglas_activadas:
-            if regla_activada.titulo == regla.titulo:
-                return True
-        return False
+        Etapa 1.4 (si 1.3 es Falso):
+            Designar como objetivo inicial el objetivo en curso
+            Marcar el objetivo en curso
+            Objetivos previos []
+            Designar todas las reglas como activas
+        """
+        self._objetivo_inicial = self._objetivo_en_curso
+        self._hechos_marcados.append(self._objetivo_en_curso)
+        self._objetivos_previos = []
+        self._reglas_activas = Regla.objects.all()
+        self.buscar_regla()
 
-    def emparejar_regla(self, regla):
+    def buscar_regla(self):
         """
-        Examina las premisas de la regla y determina si la misma debe activarse
+        Etapa 2: Busca una regla activa que incluya el objetivo en curso y
+        ninguno de los objetos en objetivos previos, si se encuentra ir a la
+        Etapa 3, caso contrario ir a la Etapa 5.
+        """
+        respuesta = None
+        for regla in self._reglas_activas:
+            conclusion = regla.conclusion
+            hechos = regla.hecho_set.all()
+            regla_valida = regla not in self._reglas_inactivas
+            conclusion_valida = conclusion not in self._objetivos_previos
+            hechos_validos = self.verificar_hechos(hechos)
+            if (regla_valida and conclusion_valida and hechos_validos and
+                    conclusion == self._objetivo_en_curso):
+                respuesta = regla
+                break
+        if respuesta is not None:
+            self.ejecutar_regla(respuesta)
+        else:
+            self.evaluar_objetivo_en_curso()
 
-        :param regla: regla cuyas premisas seran evaluadas.
-        :return True: si las premisas emparejan con la memoria de trabajo.
-        :return False: si alguna de las premisas no empareja con la memoria de
-                        trabajo.
+    def verificar_hechos(self, hechos):
         """
-        for premisa in regla.hecho_set.all():
-            if self.emparejar_premisa(premisa) is False:
+        Etapa 2.1: Verifica que los hechos no esten en los objetivos previos
+        :param hechos:
+        """
+        for hecho in hechos:
+            if hecho in self._objetivos_previos:
                 return False
         return True
 
-    def emparejar_premisa(self, premisa):
+    def ejecutar_regla(self, regla):
         """
-        Evalua si la premisa esta presente en la memoria de trabajo.
-
-        :param premisa: la premisa a ser evaluada.
-        :return True: si la premisa esta en la memoria de trabajo.
-        :return False: si la premisa no fue hallada en la memoria de trabajo.
+        Etapa 3: Ejecuta la regla relacionada al objetivo en curso, si concluye
+        se asigna el valor obtenido al objetivo en curso, e ir a la Etapa 6,
+        caso contrario ir a la Etapa 4
+        :param regla: la regla a ser ejecutada
         """
-        for hecho in self._memoria_trabajo.obtener_hechos():
-            if premisa.valor == hecho.valor:
-                return True
-        return False
+        print('Entrando a la Etapa 3')
+        valor = True
+        for hecho in regla.hecho_set.all():
+            if hecho.valor is not None:
+                valor &= hecho.valor
+            else:
+                self.verificar_regla(regla)
+                return
+        self._objetivo_en_curso.valor = valor
+        self._objetivo_en_curso.save()
+        self.validar_objetivo_en_curso()
 
-    def agregar_conclusion(self, conclusion):
+    def verificar_regla(self, regla):
         """
-        Inerta una conclusion en la memoria de trabajo.
-
-        :param conclusion: la conclusion a ser agregada.
+        Etapa 4: Si todos los objetos de la regla estan marcados, se declara la
+         regla como inactiva y se va a la Etapa 2
         """
-        self._memoria_trabajo.insertar_hecho(conclusion)
+        if (regla.conclusion in self._hechos_marcados and
+                self.verificar_hechos_marcados(regla.hecho_set.all())):
+            self._reglas_inactivas.append(regla)
+            self.buscar_regla()
+        else:
+            self._objetivos_previos.append(self._objetivo_en_curso)
+            for hecho in regla.hecho_set.all():
+                if hecho.valor is None:
+                    self._objetivo_en_curso = hecho
+                    self._hechos_marcados.append(hecho)
+                    self.buscar_regla()
+                    break
 
-    def reiniciar_reglas_activadas(self):
-        self._reglas_activadas = []
+    def verificar_hechos_marcados(self, hechos):
+        """
+        Etapa 4.1: Verifica que los hechos esten marcados
+        :param hechos:
+        """
+        resultado = True
+        for hecho in hechos:
+            if hecho in self._hechos_marcados:
+                resultado &= True
+            else:
+                resultado &= False
+                break
+        return resultado
+
+    def evaluar_objetivo_en_curso(self):
+        """
+        Etapa 5: Si el objetivo en curso es el mismo que el objetivo inicial se
+        va a la 7, en otro caso, se pregunta al usuario por el valor del del
+        objetivo en curso.Si el valor es proporcionado, es asignado y se pasa
+        a la Etapa 6, caso contrario se pasa a la Etapa 6.
+        """
+        if self._objetivo_en_curso == self._objetivo_inicial:
+            return True
+        else:
+            raise Exception('El valor es desconocido')
+
+    def validar_objetivo_en_curso(self):
+        """
+        Etapa 6: Si el objetivo en curso es el mismo que el objetivo inicial ir
+        a la Etapa 7, en otro caso designar el objetivo previo como objetivo en
+        curso, eliminarlo de objetivos e ir a la Etapa 2
+        """
+        if self._objetivo_en_curso == self._objetivo_inicial:
+            return True
+        else:
+            self._objetivo_en_curso = self._objetivos_previos[-1]
+            del self._objetivos_previos[-1]
+            self.buscar_regla()
+
+    def obtener_objetivo_en_curso(self):
+        """
+        Etapa 7
+        :return: True si el objetivo en curso tiene un valor
+        """
+        if self._objetivo_en_curso.valor is not None:
+            return self._objetivo_en_curso
+        else:
+            return None

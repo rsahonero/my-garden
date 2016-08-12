@@ -5,7 +5,7 @@
         event.preventDefault();
         $.ajax({
             type: 'GET',
-            url: '/greengarden/actualizar',
+            url: '/greengarden/actualizar/',
             success: function (data) {
                 $('#info-actualizacion').show();
             }
