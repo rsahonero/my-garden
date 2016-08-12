@@ -3,15 +3,6 @@ Modelos de la aplicacion Green Garden.
 """
 from django.db import models
 
-
-CATEGORIAS = {
-    ('N', 'Ninguno'),
-    ('H', 'Hoja'),
-    ('F', 'Flor'),
-    ('T', 'Tallo'),
-    ('R', 'Raiz'),
-}
-
 VALORES = {
     (None, ''),
     (True, 'Yes'),
@@ -40,14 +31,12 @@ class Hecho(models.Model):
     :param valor: cadena de caracteres que representa el valor de la premisa.
     :param titulo: el valor mostrado al usuario
     :param es_meta: True si el hecho es meta False de otra manera
-    :param categoria: clasificacion a la que pertenece un hecho
     :param reglas: campo que representa la relacion de muchos a muchos con las
                    reglas.
     """
     valor = models.NullBooleanField(choices=VALORES, default=None, blank=True)
     titulo = models.CharField(max_length=150, default='', blank=True)
     es_meta = models.BooleanField(default=False)
-    categoria = models.CharField(max_length=1, default='N', choices=CATEGORIAS)
     reglas = models.ManyToManyField(Regla, blank=True)
 
     def __str__(self):

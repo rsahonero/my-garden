@@ -37,14 +37,6 @@ class HechoTests(TestCase):
         hecho = Hecho.objects.get(pk=1)
         self.assertEqual(hecho.titulo, '')
 
-    def test_categoria_valor_defecto(self):
-        """
-        El hecho tiene una categoria cuyo valor por defecto
-        es N
-        """
-        hecho = Hecho.objects.get(pk=1)
-        self.assertEqual(hecho.categoria, 'N')
-
 
 class ReglaTests(TestCase):
     def setUp(self):

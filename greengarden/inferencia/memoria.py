@@ -12,11 +12,11 @@ class Memoria():
 
     def insertar_hecho(self, hecho):
         if self.el_hecho_existe(hecho) is False:
-            self._hechos.append(hecho)
+            self._hechos.add(hecho)
 
     def el_hecho_existe(self, nuevo_hecho):
         for hecho in self._hechos:
-            if hecho.valor == nuevo_hecho.valor:
+            if hecho.titulo == nuevo_hecho.titulo:
                 return True
         return False
 

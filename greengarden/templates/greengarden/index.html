@@ -22,8 +22,10 @@
                 width="140" height="140">
             <h2>Condiciones Atmosf&eacute;ricas</h2>
             <p>
-                La estacion es {{ estacion.titulo }}<br> {{ temperatura.titulo }}<br> {{ humedad.titulo }}<br> Ultimo escaneo:
-                {{ ultimo_escaneo }}
+                La estacion es {{ estacion }}<br> 
+                La temperatura es {{ temperatura }}<br> 
+                El nivel de humedad es {{ humedad }}<br> 
+                Ultimo escaneo: {{ ultimo_escaneo }}
             </p>
             <div>
                 <form action="" id="condiciones-atmosfericas">
@@ -39,7 +41,10 @@
                 Debido a las condiciones atmosfericas, su cultivo presenta el riesgo de contener alguna plaga o enfermedad. Porfavor complete
                 el siguiente cuestionario para descartar cualquier riesgo.
             </p>
-            <a class="btn btn-default" href="/greengarden/cuestionario/">Continuar</a>
+            <form action="{% url 'greengarden:inferir' %}" method="POST">
+            {% csrf_token %}
+            	<input class="btn btn-default" type="submit" value="Continuar">
+            </form>
         </div>
         <div class="col-md-4">
             <img class="img-circle" src="{% static 'greengarden/imagenes/social_media.jpg' %}" alt="Generic placeholder image" width="140"
@@ -50,5 +55,7 @@
         </div>
     </div>
 </div>
-{% endblock %} {% block scripts %}
-<script src="{% static 'greengarden/index/index.js' %}"></script> {% endblock scripts %}
+{% endblock %} 
+{% block scripts %}
+	<script src="{% static 'greengarden/index/index.js' %}"></script> 
+{% endblock scripts %}

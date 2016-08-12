@@ -35,36 +35,37 @@ body > .container {
 	margin-bottom: 10px;
 }
 
-.cuestionario form .checkbox {
-    margin: 0;
+.cuestionario form .radio {
+	padding: 5px 0;
+	margin-left: 20px;
 }
 
-.cuestionario .list-group-item .contenedor-item {
+.cuestionario .panel-heading .contenedor-item {
     display: inline-block;
     width: 100%;
 }
 
-.cuestionario .list-group-item .contenedor-item .descripcion {
+.cuestionario .panel-heading .contenedor-item .descripcion {
     width: 90%;
     float: left;
 }
 
-.cuestionario .list-group-item .contenedor-item .detalle {
+.cuestionario .panel-heading .contenedor-item .detalle {
     width: 10%;
     float: right;
 }
 
-.cuestionario .list-group-item .contenedor-item .detalle span {
+.cuestionario .panel-heading .contenedor-item .detalle span {
     float: right;
     padding-top: 5px;
 }
 
-.cuestionario .list-group-item .contenedor-item .detalle:hover {
+.cuestionario .panel-heading .contenedor-item .detalle:hover {
     cursor: pointer;
 }
 
 .cuestionario .footer {
-    display: none;
+    position: absolute;
 }
 
 .conclusion .footer {
