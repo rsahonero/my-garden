@@ -23,10 +23,15 @@ def index(request):
 
 
 def cuestionario(request):
+    memoria = []
     hecho = motor_inferencia._objetivo_en_curso
     hecho_contexto = Hecho.objects.filter(titulo=hecho.titulo)[0]
+    for hecho_marcado in motor_inferencia._hechos_marcados:
+        if hecho_marcado.valor is not None:
+            memoria.append(hecho_marcado)
     contexto = {
         'hecho': hecho_contexto,
+        'memoria': memoria,
     }
     return render(request, "greengarden/cuestionario.html", contexto)
 

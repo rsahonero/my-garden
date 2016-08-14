@@ -24,13 +24,20 @@
             </div>
         </div>
         <div class="col-md-4">
+        {% if memoria %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Memoria</h3>
                 </div>
                 <ul id="memoria" class="list-group">
+                {% for hecho in memoria %}
+                	<li class="list-group-item">
+                	{{hecho.titulo}}: {{hecho.valor}}
+                	</li>
+                {% endfor %}
                 </ul>
             </div>
+        {% endif %}
         </div>
     </div>
 </div>
