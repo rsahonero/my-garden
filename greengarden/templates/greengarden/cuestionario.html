@@ -32,7 +32,7 @@
                 <ul id="memoria" class="list-group">
                 {% for hecho in memoria %}
                 	<li class="list-group-item">
-                	{{hecho.titulo}}: {{hecho.valor}}
+                	{{ hecho.titulo|title }}: {{ hecho.valor }}
                 	</li>
                 {% endfor %}
                 </ul>
