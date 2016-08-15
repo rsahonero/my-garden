@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from greengarden.models import Hecho, Regla
-from ..inferencia.motor import Motor
+from ..inferencia.motor import Motor, TipoDeEncadenamiento
 
 
 class MotorTests(TestCase):
@@ -90,3 +90,37 @@ class MotorTests(TestCase):
         self.assertTrue(
             motor_inferencia._objetivo_en_curso in
             motor_inferencia._hechos_marcados)
+
+    def test_tipo_encadenamiento(self):
+        encadenamiento_hacia_adelante = \
+            TipoDeEncadenamiento.encadenamiento_hacia_adelante
+        encadenamiento_hacia_atras = \
+            TipoDeEncadenamiento.encadenamiento_hacia_atras
+        self.assertEqual(encadenamiento_hacia_atras.value, 0)
+        self.assertEqual(encadenamiento_hacia_adelante.value, 1)
+
+    def test_encadenamiento_adelante(self):
+        for hecho in Hecho.objects.all():
+            hecho.value = None
+            hecho.save()
+        hecho_a = Hecho.objects.filter(titulo='A')[0]
+        hecho_b = Hecho.objects.filter(titulo='B')[0]
+        hecho_d = Hecho.objects.filter(titulo='D')[0]
+        hecho_e = Hecho.objects.filter(titulo='E')[0]
+        hecho_f = Hecho.objects.filter(titulo='F')[0]
+        hecho_h = Hecho.objects.filter(titulo='H')[0]
+        hecho_i = Hecho.objects.filter(titulo='I')[0]
+        hechos_conocidos = {
+            hecho_a: True,
+            hecho_b: True,
+            hecho_d: True,
+            hecho_e: True,
+            hecho_f: True,
+            hecho_h: True,
+            hecho_i: True,
+        }
+        motor_inferencia = Motor()
+        motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
+        motor_inferencia.encadenar_reglas()
+        hecho = motor_inferencia._hechos_marcados[-1]
+        self.assertEqual(hecho.titulo, 'M')

@@ -3,7 +3,15 @@ El modulo motor contiene una clase con el mismo nombre la cual es capaz de
 realizar un ciclo de inferencia empleando el algoritmo de encadenamiento
 hacia adelante.
 """
+from enum import Enum, unique
+
 from ..models import Regla
+
+
+@unique
+class TipoDeEncadenamiento(Enum):
+    encadenamiento_hacia_atras = 0
+    encadenamiento_hacia_adelante = 1
 
 
 class Motor():
@@ -19,7 +27,7 @@ class Motor():
         self._objetivo_en_curso = None
         self._objetivo_inicial = None
         self._objetivos_previos = None
-        self._reglas_activas = None
+        self._reglas_activas = Regla.objects.all()
         self._reglas_inactivas = []
 
     def asignar_valores_conocidos(self, hechos_conocidos):
@@ -57,7 +65,6 @@ class Motor():
         self._objetivo_inicial = self._objetivo_en_curso
         self._hechos_marcados.append(self._objetivo_en_curso)
         self._objetivos_previos = []
-        self._reglas_activas = Regla.objects.all()
         self.buscar_regla()
 
     def buscar_regla(self):
@@ -92,24 +99,36 @@ class Motor():
                 return False
         return True
 
-    def ejecutar_regla(self, regla):
+    def ejecutar_regla(
+            self,
+            regla,
+            tc=TipoDeEncadenamiento.encadenamiento_hacia_atras):
         """
         Etapa 3: Ejecuta la regla relacionada al objetivo en curso, si concluye
         se asigna el valor obtenido al objetivo en curso, e ir a la Etapa 6,
         caso contrario ir a la Etapa 4
         :param regla: la regla a ser ejecutada
+        :param tc: tipo de encadenamiento
         """
-        print('Entrando a la Etapa 3')
         valor = True
         for hecho in regla.hecho_set.all():
             if hecho.valor is not None:
                 valor &= hecho.valor
             else:
-                self.verificar_regla(regla)
-                return
-        self._objetivo_en_curso.valor = valor
-        self._objetivo_en_curso.save()
-        self.validar_objetivo_en_curso()
+                if tc == TipoDeEncadenamiento.encadenamiento_hacia_atras:
+                    self.verificar_regla(regla)
+                    return
+                elif tc == TipoDeEncadenamiento.encadenamiento_hacia_adelante:
+                    return False
+        if tc == TipoDeEncadenamiento.encadenamiento_hacia_atras:
+            self._objetivo_en_curso.valor = valor
+            self._objetivo_en_curso.save()
+            self.validar_objetivo_en_curso()
+        elif tc == TipoDeEncadenamiento.encadenamiento_hacia_adelante:
+            regla.conclusion.valor = valor
+            regla.conclusion.save()
+            self._hechos_marcados.append(regla.conclusion)
+            return True
 
     def verificar_regla(self, regla):
         """
@@ -177,3 +196,18 @@ class Motor():
             return self._objetivo_en_curso
         else:
             return None
+
+    def encadenar_reglas(self):
+        """
+        Realiza un encadenamiento hacia adelante
+        """
+        for regla in self._reglas_activas:
+            if regla not in self._reglas_inactivas:
+                activada = self.ejecutar_regla(
+                   regla,
+                   TipoDeEncadenamiento.encadenamiento_hacia_adelante)
+                if activada:
+                    self._reglas_inactivas.append(regla)
+                    self.encadenar_reglas()
+                else:
+                    continue
