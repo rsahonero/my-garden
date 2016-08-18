@@ -4,16 +4,31 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Hecho
+from .models import Hecho, CondicionAtmosferica, Regla
 from .inferencia.motor import Motor
 
-motor_inferencia = Motor()
-metas = Hecho.objects.filter(es_meta=True)
 indice = 0
+motor_inferencia = Motor()
+metas = []
+
+
+def cargar_metas():
+    metas = []
+    condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
+    meta_ids = condicion_atmosferica.metas.split(';')
+    for meta_id in meta_ids:
+        hecho = Hecho.objects.get(pk=meta_id)
+        for regla in Regla.objects.filter(conclusion__es_meta=True):
+            if hecho in regla.hecho_set.all():
+                metas.append(regla.conclusion)
+                break
+    return metas
 
 
 def index(request):
     global indice
+    global metas
+    metas = []
     indice = 0
     context = {
         'temperatura': 'Alta',
@@ -41,6 +56,7 @@ def cuestionario(request):
 def inferir(request):
     global indice
     global metas
+    metas = cargar_metas()
     if request.method == 'POST':
         for hecho in Hecho.objects.all():
             if hecho.es_monitorizable is False or hecho.es_meta:

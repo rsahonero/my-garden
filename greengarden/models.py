@@ -71,10 +71,12 @@ class CondicionAtmosferica(models.Model):
     :param temperatura: la temperatura al momento de la monitorizacion
     :param humedad: la humedad al momento de la monitorizacion
     :param estacion: la estacion al momento de la monitorizacion
+    :param metas: las metas encontradas al momento de la monitorizacion
     :param ultima_actualizacion: el momento en el que fue realizada la
                                  monitorizacion
     """
     temperatura = models.IntegerField()
     humedad = models.IntegerField()
     estacion = models.IntegerField()
+    metas = models.CharField(max_length=50)
     ultima_actualizacion = models.DateTimeField(auto_now=True)

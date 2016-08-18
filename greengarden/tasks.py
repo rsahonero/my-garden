@@ -2,7 +2,7 @@ from celery.task.schedules import crontab  # @UnresolvedImport
 from celery.decorators import periodic_task  # @UnresolvedImport
 from celery.utils.log import get_task_logger
 
-from .models import Hecho
+from .models import Hecho, CondicionAtmosferica
 from .inferencia.motor import Motor
 
 logger = get_task_logger(__name__)
@@ -50,6 +50,17 @@ def task_monitorizar_condiciones_atmosfericas():
     motor_inferencia = Motor()
     motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
     motor_inferencia.encadenar_reglas()
+    metas = []
+    for hecho in motor_inferencia._hechos_marcados:
+        if hecho.titulo.startswith('probabilidad'):
+            metas.append(str(hecho.id))
+
+    condiciones_atmosfericas = CondicionAtmosferica.objects.get(pk=1)
+    condiciones_atmosfericas.temperatura = hecho_temperatura.id
+    condiciones_atmosfericas.humedad = hecho_humedad.id
+    condiciones_atmosfericas.estacion = hecho_mes.id
+    condiciones_atmosfericas.metas = ';'.join(metas)
+    condiciones_atmosfericas.save()
 
     logger.info(motor_inferencia._hechos_marcados)
     logger.info("Monitorizacion completada")
