@@ -58,8 +58,8 @@ class Detalle(models.Model):
         primary_key=True,
     )
     imagen = models.CharField(max_length=100)
-    descripcion = models.TextField(max_length=250)
-    tratamiento = models.TextField(max_length=250, blank=True)
+    descripcion = models.TextField()
+    tratamiento = models.TextField(blank=True)
 
     def __str__(self):
         return self.hecho.titulo
