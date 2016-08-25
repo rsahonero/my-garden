@@ -2,7 +2,7 @@ from celery.task.schedules import crontab  # @UnresolvedImport
 from celery.decorators import periodic_task  # @UnresolvedImport
 from celery.utils.log import get_task_logger
 
-from .models import Hecho, CondicionAtmosferica
+from .models import Hecho, CondicionAtmosferica, ParametrosAtmosfericos
 from .inferencia.motor import Motor
 
 logger = get_task_logger(__name__)
@@ -19,9 +19,10 @@ def task_monitorizar_condiciones_atmosfericas():
         if hecho.es_monitorizable or hecho.es_meta:
             hecho.valor = None
             hecho.save()
-    temperatura = 26
-    humedad = 55
-    mes = 'Octubre'
+    parametros_atmosfericos = ParametrosAtmosfericos.objects.get(pk=1)
+    temperatura = parametros_atmosfericos.temperatura
+    humedad = parametros_atmosfericos.humedad_relativa
+    mes = parametros_atmosfericos.mes
     hecho_temperatura = None
     hecho_humedad = None
 
