@@ -80,3 +80,15 @@ class CondicionAtmosferica(models.Model):
     estacion = models.IntegerField()
     metas = models.CharField(max_length=50)
     ultima_actualizacion = models.DateTimeField(auto_now=True)
+
+
+class ParametrosAtmosfericos(models.Model):
+    """ Almacena los valores de los parametros atmosfericos
+
+    :param temperatura: la temperatura obtenida de un servicio
+    :param humedad_relativa: la humedad obtenida de un servicio
+    :param mes: el mes obtenido de un servicio
+    """
+    temperatura = models.DecimalField(decimal_places=2, max_digits=4)
+    humedad_relativa = models.DecimalField(decimal_places=2, max_digits=4)
+    mes = models.CharField(max_length=50)
