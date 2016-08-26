@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{% static 'greengarden/bootstrap/css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'greengarden/styles.css' %}">
     <title>{% block title %}Green Garden{% endblock title %}</title>
+    {{ form.media }}
 </head>
 
 <body>
@@ -22,7 +23,6 @@
                     <li class="active"><a href="/greengarden">Inicio</a></li>
                     <li><a href="#">Ayuda</a></li>
                     <li><a href="#">Informacion</a></li>
-                    <li><a href="{% url 'greengarden:cuestionario' %}">Cuestionario</a></li>
                 </ul>
             </div>
         </div>

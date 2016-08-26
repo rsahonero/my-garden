@@ -1,86 +1,126 @@
 from django.test import TestCase
 
-from ..inferencia import memoria, motor
-from ..models import Hecho, Regla
-
-
-class MemoriaTests(TestCase):
-    def test_tiene_una_lista_de_hechos(self):
-        """
-        La memoria de trabajo deberia tener una lista de hechos
-        """
-        memoria_trabajo = memoria.Memoria()
-        self.assertIsNotNone(memoria_trabajo.obtener_hechos())
-
-    def test_se_puede_agregar_un_hecho(self):
-        """
-        Se deberia poder agregar hechos a la memoria de trabajo
-        """
-        hecho = Hecho()
-        memoria_trabajo = memoria.Memoria()
-        memoria_trabajo.insertar_hecho(hecho)
-        self.assertTrue(len(memoria_trabajo.obtener_hechos()) > 0)
+from greengarden.models import Hecho, Regla
+from ..inferencia.motor import Motor, TipoDeEncadenamiento
 
 
 class MotorTests(TestCase):
     def setUp(self):
-        Hecho.objects.create(valor='A')
-        Hecho.objects.create(valor='B')
-        Hecho.objects.create(valor='C')
-        Hecho.objects.create(valor='D')
-        Hecho.objects.create(valor='E')
-        Hecho.objects.create(valor='F')
-        Hecho.objects.create(valor='G')
-        Hecho.objects.create(valor='H', es_meta=True)
-        Hecho.objects.create(valor='X')
+        Hecho.objects.create(titulo='A')
+        Hecho.objects.create(titulo='B')
+        Hecho.objects.create(titulo='C')
+        Hecho.objects.create(titulo='D')
+        Hecho.objects.create(titulo='E')
+        Hecho.objects.create(titulo='F')
+        Hecho.objects.create(titulo='G')
+        Hecho.objects.create(titulo='H')
+        Hecho.objects.create(titulo='I')
+        Hecho.objects.create(titulo='J')
+        Hecho.objects.create(titulo='K')
+        Hecho.objects.create(titulo='L')
+        Hecho.objects.create(titulo='M')
 
-        Regla.objects.create(titulo='r1', conclusion=Hecho.objects.get(pk=6))
-        Regla.objects.create(titulo='r2', conclusion=Hecho.objects.get(pk=1))
-        Regla.objects.create(titulo='r3', conclusion=Hecho.objects.get(pk=1))
-        Regla.objects.create(titulo='r4', conclusion=Hecho.objects.get(pk=9))
-        Regla.objects.create(titulo='r5', conclusion=Hecho.objects.get(pk=5))
-        Regla.objects.create(titulo='r6', conclusion=Hecho.objects.get(pk=8))
-        Regla.objects.create(titulo='r7', conclusion=Hecho.objects.get(pk=4))
-        Regla.objects.create(titulo='r8', conclusion=Hecho.objects.get(pk=1))
+        Regla.objects.create(
+            titulo='regla_1', conclusion=Hecho.objects.get(pk=3))
+        Regla.objects.create(
+            titulo='regla_2', conclusion=Hecho.objects.get(pk=7))
+        Regla.objects.create(
+            titulo='regla_3', conclusion=Hecho.objects.get(pk=10))
+        Regla.objects.create(
+            titulo='regla_4', conclusion=Hecho.objects.get(pk=11))
+        Regla.objects.create(
+            titulo='regla_5', conclusion=Hecho.objects.get(pk=12))
+        Regla.objects.create(
+            titulo='regla_6', conclusion=Hecho.objects.get(pk=13))
 
-        Hecho.objects.get(pk=1).reglas.add(Regla.objects.get(pk=6))
+        Hecho.objects.get(pk=1).reglas.add(Regla.objects.get(pk=1))
         Hecho.objects.get(pk=2).reglas.add(Regla.objects.get(pk=1))
-        Hecho.objects.get(pk=2).reglas.add(Regla.objects.get(pk=4))
-        Hecho.objects.get(pk=3).reglas.add(Regla.objects.get(pk=3))
-        Hecho.objects.get(pk=3).reglas.add(Regla.objects.get(pk=7))
-        Hecho.objects.get(pk=3).reglas.add(Regla.objects.get(pk=8))
-        Hecho.objects.get(pk=4).reglas.add(Regla.objects.get(pk=1))
         Hecho.objects.get(pk=4).reglas.add(Regla.objects.get(pk=2))
-        Hecho.objects.get(pk=4).reglas.add(Regla.objects.get(pk=5))
-        Hecho.objects.get(pk=5).reglas.add(Regla.objects.get(pk=1))
-        Hecho.objects.get(pk=6).reglas.add(Regla.objects.get(pk=3))
-        Hecho.objects.get(pk=7).reglas.add(Regla.objects.get(pk=2))
-        Hecho.objects.get(pk=9).reglas.add(Regla.objects.get(pk=6))
-        Hecho.objects.get(pk=9).reglas.add(Regla.objects.get(pk=8))
+        Hecho.objects.get(pk=5).reglas.add(Regla.objects.get(pk=2))
+        Hecho.objects.get(pk=6).reglas.add(Regla.objects.get(pk=2))
+        Hecho.objects.get(pk=8).reglas.add(Regla.objects.get(pk=3))
+        Hecho.objects.get(pk=9).reglas.add(Regla.objects.get(pk=3))
+        Hecho.objects.get(pk=3).reglas.add(Regla.objects.get(pk=4))
+        Hecho.objects.get(pk=7).reglas.add(Regla.objects.get(pk=4))
+        Hecho.objects.get(pk=7).reglas.add(Regla.objects.get(pk=5))
+        Hecho.objects.get(pk=10).reglas.add(Regla.objects.get(pk=5))
+        Hecho.objects.get(pk=11).reglas.add(Regla.objects.get(pk=6))
+        Hecho.objects.get(pk=12).reglas.add(Regla.objects.get(pk=6))
 
-    def test_examinar_regla_es_valida(self):
-        memoria_trabajo = memoria.Memoria()
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=2))
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=3))
-        motor_inferencia = motor.Motor(memoria_trabajo)
-        regla = Regla.objects.get(pk=4)
-        self.assertTrue(motor_inferencia.emparejar_regla(regla))
+    def test_asignar_valores_conocidos(self):
+        hecho_d = Hecho.objects.filter(titulo='D')[0]
+        hecho_e = Hecho.objects.filter(titulo='E')[0]
+        hecho_f = Hecho.objects.filter(titulo='F')[0]
+        hecho_l = Hecho.objects.filter(titulo='L')[0]
+        hechos_conocidos = {
+            hecho_d: True,
+            hecho_e: True,
+            hecho_f: True,
+            hecho_l: True
+        }
+        motor_inferencia = Motor()
+        motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
+        self.assertTrue(hecho_d)
+        self.assertTrue(hecho_e)
+        self.assertTrue(hecho_f)
+        self.assertTrue(hecho_l)
 
-    def test_agregar_conclusion(self):
-        memoria_trabajo = memoria.Memoria()
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=2))
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=3))
-        regla = Regla.objects.get(pk=4)
-        motor_inferencia = motor.Motor(memoria_trabajo)
-        if motor_inferencia.emparejar_regla(regla):
-            motor_inferencia.agregar_conclusion(regla.conclusion)
-        self.assertEqual('X', memoria_trabajo.obtener_hechos()[-1].valor)
-        del memoria_trabajo.obtener_hechos()[-1]
+    def test_cargar_objetivo_en_curso(self):
+        motor_inferencia = Motor()
+        meta = Hecho.objects.filter(titulo='M')[0]
+        motor_inferencia.cargar_objetivo_en_curso(meta)
+        self.assertEqual(motor_inferencia._objetivo_en_curso, meta)
 
-    def test_inferir_con_estado_meta(self):
-        memoria_trabajo = memoria.Memoria()
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=2))
-        memoria_trabajo.insertar_hecho(Hecho.objects.get(pk=3))
-        motor_inferencia = motor.Motor(memoria_trabajo)
-        self.assertTrue(motor_inferencia.inferir())
-        self.assertEqual('H', memoria_trabajo.obtener_hechos()[-1].valor)
+    def test_verificar_objetivo(self):
+        motor_inferencia = Motor()
+        meta = Hecho.objects.filter(titulo='M')[0]
+        motor_inferencia.cargar_objetivo_en_curso(meta)
+        self.assertFalse(motor_inferencia.verificar_objetivo())
+
+    def test_cargar_objetivos(self):
+        motor_inferencia = Motor()
+        motor_inferencia.cargar_objetivos()
+        self.assertEqual(
+            motor_inferencia._objetivo_inicial,
+            motor_inferencia._objetivo_en_curso)
+        self.assertEqual(
+            len(motor_inferencia._reglas_activas),
+            Regla.objects.count())
+        self.assertEqual(len(motor_inferencia._objetivos_previos), 0)
+        self.assertTrue(
+            motor_inferencia._objetivo_en_curso in
+            motor_inferencia._hechos_marcados)
+
+    def test_tipo_encadenamiento(self):
+        encadenamiento_hacia_adelante = \
+            TipoDeEncadenamiento.encadenamiento_hacia_adelante
+        encadenamiento_hacia_atras = \
+            TipoDeEncadenamiento.encadenamiento_hacia_atras
+        self.assertEqual(encadenamiento_hacia_atras.value, 0)
+        self.assertEqual(encadenamiento_hacia_adelante.value, 1)
+
+    def test_encadenamiento_adelante(self):
+        for hecho in Hecho.objects.all():
+            hecho.value = None
+            hecho.save()
+        hecho_a = Hecho.objects.filter(titulo='A')[0]
+        hecho_b = Hecho.objects.filter(titulo='B')[0]
+        hecho_d = Hecho.objects.filter(titulo='D')[0]
+        hecho_e = Hecho.objects.filter(titulo='E')[0]
+        hecho_f = Hecho.objects.filter(titulo='F')[0]
+        hecho_h = Hecho.objects.filter(titulo='H')[0]
+        hecho_i = Hecho.objects.filter(titulo='I')[0]
+        hechos_conocidos = {
+            hecho_a: True,
+            hecho_b: True,
+            hecho_d: True,
+            hecho_e: True,
+            hecho_f: True,
+            hecho_h: True,
+            hecho_i: True,
+        }
+        motor_inferencia = Motor()
+        motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
+        motor_inferencia.encadenar_reglas()
+        hecho = motor_inferencia._hechos_marcados[-1]
+        self.assertEqual(hecho.titulo, 'M')

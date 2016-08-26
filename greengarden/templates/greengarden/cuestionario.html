@@ -2,86 +2,47 @@
 <div class="cuestionario">
     <div class="row">
         <div class="col-md-12">
-            <h2>Porfavor selecciona los s&iacute;tomas visibles</h2>
+            <h2>Porfavor contesta la siguiente pregunta.</h2>
         </div>
     </div>
     <div class="row">
         <div class="col-md-8">
-            <form id="form-cuestionario" method="POST" action="{% url 'greengarden:inferir' %}">
-                {% csrf_token %}
-                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab">
-                            <h3 class="panel-title">
-                                <a href="#panel-hojas" data-toggle="collapse" data-parent="#accordion" aria-expanded="true" aria-controls="panel-hojas">Hojas</a>
-                            </h3>
-                        </div>
-                        <div id="panel-hojas" class="checkbox panel-collapse collapse in" role="tabpanel" aria-labelledby="panel-hojas">
-                            <ul class="list-group">
-                                {% for hecho in hechos_hojas %}
-                                    {% include 'greengarden/cuestionario_item.html' %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab">
-                            <h3 class="panel-title">
-                                <a href="#panel-flores" class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-flores">Flores</a>
-                            </h3>
-                        </div>
-                        <div id="panel-flores" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-flores">
-                            <ul class="list-group">
-                                {% for hecho in hechos_flores %}
-                                    {% include 'greengarden/cuestionario_item.html' %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab">
-                            <h3 class="panel-title">
-                                <a href="#panel-tallo" class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-tallo">Tallo</a>
-                            </h3>
-                        </div>
-                        <div id="panel-tallo" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-tallo">
-                            <ul class="list-group">
-                                {% for hecho in hechos_tallo %}
-                                    {% include 'greengarden/cuestionario_item.html' %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab">
-                            <h3 class="panel-title">
-                                <a href="#panel-raiz" class="collapsed" data-toggle="collapse" data-parent="#accordion" aria-expanded="false" aria-controls="panel-raiz">Ra&iacute;z</a>
-                            </h3>
-                        </div>
-                        <div id="panel-raiz" class="checkbox panel-collapse collapse" role="tabpanel" aria-labelledby="panel-raiz">
-                            <ul class="list-group">
-                                {% for hecho in hechos_raiz %}
-                                    {% include 'greengarden/cuestionario_item.html' %}
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="contenedor-item">
+				        <div class="descripcion">
+				            <h3 class="panel-title">Existe la presencia de {{ hecho.titulo }}?</h3>				
+				        </div>
+				        <div class="detalle" data-toggle="modal" data-target="#modal-{{hecho.id}}">
+				            <span class="glyphicon glyphicon-leaf"></span>
+				        </div>
+					</div>
                 </div>
-                <input type="submit" class="btn btn-default" value="Inferir">
-            </form>
+                <ul class="list-group">
+                	{% include 'greengarden/cuestionario_item.html' %}
+                </ul>
+            </div>
         </div>
         <div class="col-md-4">
+        {% if memoria %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Memoria</h3>
                 </div>
                 <ul id="memoria" class="list-group">
+                {% for hecho in memoria %}
+                	<li class="list-group-item">
+                	{{ hecho.titulo|capfirst }}: {{ hecho.valor }}
+                	</li>
+                {% endfor %}
                 </ul>
             </div>
+        {% endif %}
         </div>
     </div>
 </div>
-{% endblock content %} {% block footer %}
+{% endblock content %}
+{% block footer %}
 <div class="cuestionario">
     <footer class="footer">
         <div class="container">
@@ -89,5 +50,4 @@
         </div>
     </footer>
 </div>
-{% endblock footer %} {% block scripts %}
-<script src="{% static 'greengarden/cuestionario/cuestionario.js' %}"></script> {% endblock scripts %}
+{% endblock footer %}

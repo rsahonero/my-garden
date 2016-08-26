@@ -19,4 +19,5 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^greengarden/', include('greengarden.urls')),
+    url(r'^tinymce/', include('tinymce.urls')),
 ]

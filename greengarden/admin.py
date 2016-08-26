@@ -1,6 +1,30 @@
 from django.contrib import admin
+from django import forms
 
-from .models import Hecho, Regla, Detalle, CondicionAtmosferica
+from tinymce.widgets import TinyMCE
+
+from .models import (
+    Hecho,
+    Regla,
+    Detalle,
+    CondicionAtmosferica,
+    ParametrosAtmosfericos)
+
+
+class DetalleForm(forms.ModelForm):
+    descripcion = forms.CharField(
+                    widget=TinyMCE(attrs={'cols': 80, 'rows': 10}))
+    tratamiento = forms.CharField(
+                    widget=TinyMCE(attrs={'cols': 80, 'rows': 10}),
+                    required=False)
+
+    class Meta:
+        model = Detalle
+        fields = ['hecho', 'imagen', 'descripcion', 'tratamiento']
+
+
+class DetalleAdmin(admin.ModelAdmin):
+    form = DetalleForm
 
 
 class HechoReglasInline(admin.TabularInline):
@@ -21,5 +45,6 @@ class HechoAdmin(admin.ModelAdmin):
 
 admin.site.register(Hecho, HechoAdmin)
 admin.site.register(Regla, ReglaAdmin)
-admin.site.register(Detalle)
+admin.site.register(Detalle, DetalleAdmin)
 admin.site.register(CondicionAtmosferica)
+admin.site.register(ParametrosAtmosfericos)
