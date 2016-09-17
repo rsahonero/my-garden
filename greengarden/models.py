@@ -29,6 +29,7 @@ class Hecho(models.Model):
     """ Representa las premisas de una regla.
 
     :param valor: cadena de caracteres que representa el valor de la premisa.
+    :param pregunta: la pregunta realizada al usuario para obtener el valor
     :param titulo: el valor mostrado al usuario
     :param es_meta: True si el hecho es meta False de otra manera
     :param es_monitorizable: True si el hecho se puede monitorear
@@ -39,6 +40,7 @@ class Hecho(models.Model):
     titulo = models.CharField(max_length=150, default='', blank=True)
     es_meta = models.BooleanField(default=False)
     es_monitorizable = models.BooleanField(default=False)
+    pregunta = models.CharField(max_length=200, blank=True)
     reglas = models.ManyToManyField(Regla, blank=True)
 
     def __str__(self):
