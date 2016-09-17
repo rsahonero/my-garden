@@ -4,6 +4,7 @@
 *.jpg
 *.db
 *.rdb
+*.ico
 
 .project
 .pydevproject
