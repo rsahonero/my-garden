@@ -9,6 +9,12 @@ VALORES = {
     (False, 'No'),
 }
 
+ESTADOS = {
+    ('AS', 'Controlado'),
+    ('IN', 'Infectado'),
+    ('RS', 'Riesgo')
+}
+
 
 class Regla(models.Model):
     """ La clase regla forma parte de la base de conocimiento.
@@ -94,3 +100,17 @@ class ParametrosAtmosfericos(models.Model):
     temperatura = models.DecimalField(decimal_places=2, max_digits=4)
     humedad_relativa = models.DecimalField(decimal_places=2, max_digits=4)
     mes = models.CharField(max_length=50)
+
+
+class Estado(models.Model):
+    """ Almacena los valores de los estados de la monitorizacion
+
+    :param titulo: el titulo del estado
+    :param descripcion: la descripcion del estado
+    :param imagen: la imagen asociada al estado
+    :param codigo: el codigo del estado
+    """
+    titulo = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    imagen = models.CharField(max_length=100)
+    codigo = models.CharField(choices=ESTADOS, max_length=2)
