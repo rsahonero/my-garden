@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Hecho, CondicionAtmosferica, Regla
+from .models import Hecho, CondicionAtmosferica, Regla, Estado
 from .inferencia.motor import Motor
 
 indice = 0
@@ -30,11 +30,17 @@ def index(request):
     global metas
     metas = []
     indice = 0
+    estado = None
+    condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
+    meta_ids = condicion_atmosferica.metas.split(';')
+    if len(meta_ids) > 0:
+        estado = Estado.objects.filter(codigo='RS')[0]
     context = {
         'temperatura': 'Alta',
         'humedad': 'Relativa',
         'estacion': 'Primavera',
-        'ultimo_escaneo': timezone.now()
+        'ultimo_escaneo': timezone.now(),
+        'estado': estado,
     }
     return render(request, "greengarden/index.html", context)
 

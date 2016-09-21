@@ -114,3 +114,6 @@ class Estado(models.Model):
     descripcion = models.TextField()
     imagen = models.CharField(max_length=100)
     codigo = models.CharField(choices=ESTADOS, max_length=2)
+
+    def __str__(self):
+        return self.titulo
