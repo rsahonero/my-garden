@@ -8,7 +8,8 @@ from .models import (
     Regla,
     Detalle,
     CondicionAtmosferica,
-    ParametrosAtmosfericos)
+    ParametrosAtmosfericos,
+    Estado)
 
 
 class DetalleForm(forms.ModelForm):
@@ -48,3 +49,4 @@ admin.site.register(Regla, ReglaAdmin)
 admin.site.register(Detalle, DetalleAdmin)
 admin.site.register(CondicionAtmosferica)
 admin.site.register(ParametrosAtmosfericos)
+admin.site.register(Estado)
