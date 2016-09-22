@@ -122,7 +122,14 @@ def conclusion(request):
                 except Exception:
                     return HttpResponseRedirect(
                             reverse('greengarden:cuestionario'))
-            return render(request, "greengarden/index.html")
+            contexto = {
+                'temperatura': 'Alta',
+                'humedad': 'Relativa',
+                'estacion': 'Primavera',
+                'ultimo_escaneo': timezone.now(),
+                'estado': Estado.objects.filter(codigo='AS')[0],
+            }
+            return render(request, "greengarden/index.html", context=contexto)
 
 
 def actualizar(request):
