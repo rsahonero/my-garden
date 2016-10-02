@@ -18,6 +18,16 @@ body > .container {
     margin: 20px 0;
 }
 
+.btn-default {
+    border-color: #009688;
+}
+
+.btn-default:hover {
+    background-color: #009688;
+    border-color: #009688;
+    color: #FFF;
+}
+
 .home .marketing h2 {
     font-weight: normal;
 }
