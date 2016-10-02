@@ -1,7 +1,7 @@
 {% load staticfiles %}
 <li class="list-group-item">
     <div>
-	    <form action="{% url 'greengarden:evaluar' %}" method="POST">
+	    <form id="cuestionario" action="{% url 'greengarden:evaluar' %}" method="POST">
 		{% csrf_token %}
 			<div class="radio">
 				<span><input type="radio" name="valor" value="Si">Si</span>
