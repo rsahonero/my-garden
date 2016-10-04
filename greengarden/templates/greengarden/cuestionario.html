@@ -1,5 +1,11 @@
 {% extends "base.html" %} {% load staticfiles %} {% block content %}
 <div class="cuestionario">
+    <div class="alert alert-danger alert-dismisable fade in" role="alert" id="error-cuestionario">
+        <button class="close" type="button" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        Seleccione 'Si' o 'No'.
+    </div>
     <div class="row">
         <div class="col-md-12">
             <h2>Porfavor contesta la siguiente pregunta.</h2>

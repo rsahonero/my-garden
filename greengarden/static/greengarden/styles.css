@@ -37,7 +37,7 @@ body > .container {
     text-align: center;
 }
 
-.home .alert {
+.home .alert, .cuestionario .alert {
     display: none;
 }
 
