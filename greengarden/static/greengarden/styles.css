@@ -18,6 +18,16 @@ body > .container {
     margin: 20px 0;
 }
 
+.btn-default {
+    border-color: #009688;
+}
+
+.btn-default:hover {
+    background-color: #009688;
+    border-color: #009688;
+    color: #FFF;
+}
+
 .home .marketing h2 {
     font-weight: normal;
 }
@@ -27,7 +37,7 @@ body > .container {
     text-align: center;
 }
 
-.home .alert {
+.home .alert, .cuestionario .alert {
     display: none;
 }
 
@@ -38,6 +48,15 @@ body > .container {
 .cuestionario form .radio {
 	padding: 5px 0;
 	margin-left: 20px;
+}
+
+.cuestionario .panel-default {
+    border-color: #004D40;
+}
+
+.cuestionario .panel-heading {
+    color: #FFF;
+    background-color: #004D40;
 }
 
 .cuestionario .panel-heading .contenedor-item {

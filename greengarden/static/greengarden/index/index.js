@@ -15,4 +15,10 @@
     $('.alert .close').click(function () {
         $(this).parent().hide();
     });
+
+    $('.btn-default').on('mousedown', function () {
+        $(this).css('background-color', '#009688');
+        $(this).css('border-color', '#009688');
+        $(this).css('color', '#FFF');
+    });
 })();
