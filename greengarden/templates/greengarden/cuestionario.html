@@ -38,7 +38,11 @@
                 <ul id="memoria" class="list-group">
                 {% for hecho in memoria %}
                 	<li class="list-group-item">
-                	{{ hecho.titulo|capfirst }}: {{ hecho.valor }}
+                    {% if hecho.valor %}
+                    <span style="color: green">{{ hecho.titulo|capfirst }}</span>
+                    {% else %}
+                    <span style="color: red">{{ hecho.titulo|capfirst }}</span>
+                    {% endif %}
                 	</li>
                 {% endfor %}
                 </ul>
