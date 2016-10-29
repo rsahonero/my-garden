@@ -1,0 +1,38 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="shortcut icon" type="image/png" href="{% static 'greengarden/favicon.ico' %}"/>
+    <link rel="stylesheet" href="{% static 'greengarden/bootstrap/css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'greengarden/cover.css' %}">
+    <title>Green Garden</title>
+</head>
+<body>
+    <div class="site-wrapper">
+    <div class="site-wrapper-inner">
+        <div class="cover-container">
+
+            <div class="inner cover">
+                <h1 class="cover-heading">Green Garden</h1>
+                <p class="lead">Es un sistema experto cuya funcionalidad es ayudarte en la monitorizaci&oacute;n y control de plagas y enfermedades en tus cultivos de flores y rosas.</p>
+                <p class="lead">
+                    <a href="/greengarden/" class="btn btn-lg btn-default">Continuar</a>
+                </p>
+            </div>
+
+            <div class="mastfoot">
+                <div class="inner">
+                    <p><a>&copy; 2016 Rosario Sahonero</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'greengarden/bootstrap/js/jquery-2.2.4.min.js' %}"></script>
+<script src="{% static 'greengarden/bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

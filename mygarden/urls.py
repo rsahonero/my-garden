@@ -16,8 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 
+from greengarden import views
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^greengarden/', include('greengarden.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
+    url(r'^', views.home, name='home')
 ]

@@ -25,6 +25,10 @@ def cargar_metas():
     return metas
 
 
+def home(request):
+    return render(request, 'greengarden/home.html')
+
+
 def index(request):
     global indice
     global metas
