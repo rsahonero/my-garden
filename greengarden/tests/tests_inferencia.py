@@ -1,11 +1,14 @@
 from django.test import TestCase
 
 from greengarden.models import Hecho, Regla
-from ..inferencia.motor import Motor, TipoDeEncadenamiento
+from ..inferencia.motor import Motor
 
 
-class MotorTests(TestCase):
+class InferenciaTest(TestCase):
+    """Tests para la inferencia."""
+
     def setUp(self):
+        """Inicializa un conjunto de Hechos y Reglas"""
         Hecho.objects.create(titulo='A')
         Hecho.objects.create(titulo='B')
         Hecho.objects.create(titulo='C')
@@ -20,18 +23,12 @@ class MotorTests(TestCase):
         Hecho.objects.create(titulo='L')
         Hecho.objects.create(titulo='M')
 
-        Regla.objects.create(
-            titulo='regla_1', conclusion=Hecho.objects.get(pk=3))
-        Regla.objects.create(
-            titulo='regla_2', conclusion=Hecho.objects.get(pk=7))
-        Regla.objects.create(
-            titulo='regla_3', conclusion=Hecho.objects.get(pk=10))
-        Regla.objects.create(
-            titulo='regla_4', conclusion=Hecho.objects.get(pk=11))
-        Regla.objects.create(
-            titulo='regla_5', conclusion=Hecho.objects.get(pk=12))
-        Regla.objects.create(
-            titulo='regla_6', conclusion=Hecho.objects.get(pk=13))
+        Regla.objects.create(titulo='regla_1', conclusion=Hecho.objects.get(pk=3))
+        Regla.objects.create(titulo='regla_2', conclusion=Hecho.objects.get(pk=7))
+        Regla.objects.create(titulo='regla_3', conclusion=Hecho.objects.get(pk=10))
+        Regla.objects.create(titulo='regla_4', conclusion=Hecho.objects.get(pk=11))
+        Regla.objects.create(titulo='regla_5', conclusion=Hecho.objects.get(pk=12))
+        Regla.objects.create(titulo='regla_6', conclusion=Hecho.objects.get(pk=13))
 
         Hecho.objects.get(pk=1).reglas.add(Regla.objects.get(pk=1))
         Hecho.objects.get(pk=2).reglas.add(Regla.objects.get(pk=1))
@@ -58,18 +55,26 @@ class MotorTests(TestCase):
             hecho_f: True,
             hecho_l: True
         }
+
         motor_inferencia = Motor()
         motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
-        self.assertTrue(hecho_d)
-        self.assertTrue(hecho_e)
-        self.assertTrue(hecho_f)
-        self.assertTrue(hecho_l)
+        memoria_trabajo = motor_inferencia.memoria_trabajo
+
+        d_value = memoria_trabajo.obtener_valor(hecho_d.titulo)
+        e_value = memoria_trabajo.obtener_valor(hecho_e.titulo)
+        f_value = memoria_trabajo.obtener_valor(hecho_f.titulo)
+        l_value = memoria_trabajo.obtener_valor(hecho_l.titulo)
+
+        self.assertTrue(d_value)
+        self.assertTrue(e_value)
+        self.assertTrue(f_value)
+        self.assertTrue(l_value)
 
     def test_cargar_objetivo_en_curso(self):
         motor_inferencia = Motor()
         meta = Hecho.objects.filter(titulo='M')[0]
         motor_inferencia.cargar_objetivo_en_curso(meta)
-        self.assertEqual(motor_inferencia._objetivo_en_curso, meta)
+        self.assertEqual(motor_inferencia.objetivo_en_curso, meta)
 
     def test_verificar_objetivo(self):
         motor_inferencia = Motor()
@@ -81,23 +86,15 @@ class MotorTests(TestCase):
         motor_inferencia = Motor()
         motor_inferencia.cargar_objetivos()
         self.assertEqual(
-            motor_inferencia._objetivo_inicial,
-            motor_inferencia._objetivo_en_curso)
+            motor_inferencia.objetivo_inicial,
+            motor_inferencia.objetivo_en_curso)
         self.assertEqual(
-            len(motor_inferencia._reglas_activas),
+            len(motor_inferencia.reglas_activas),
             Regla.objects.count())
-        self.assertEqual(len(motor_inferencia._objetivos_previos), 0)
+        self.assertEqual(len(motor_inferencia.objetivos_previos), 0)
         self.assertTrue(
-            motor_inferencia._objetivo_en_curso in
-            motor_inferencia._hechos_marcados)
-
-    def test_tipo_encadenamiento(self):
-        encadenamiento_hacia_adelante = \
-            TipoDeEncadenamiento.encadenamiento_hacia_adelante
-        encadenamiento_hacia_atras = \
-            TipoDeEncadenamiento.encadenamiento_hacia_atras
-        self.assertEqual(encadenamiento_hacia_atras.value, 0)
-        self.assertEqual(encadenamiento_hacia_adelante.value, 1)
+            motor_inferencia.objetivo_en_curso in
+            motor_inferencia.hechos_marcados)
 
     def test_encadenamiento_adelante(self):
         for hecho in Hecho.objects.all():
@@ -122,5 +119,5 @@ class MotorTests(TestCase):
         motor_inferencia = Motor()
         motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
         motor_inferencia.encadenar_reglas()
-        hecho = motor_inferencia._hechos_marcados[-1]
+        hecho = motor_inferencia.hechos_marcados[-1]
         self.assertEqual(hecho.titulo, 'M')

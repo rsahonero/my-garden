@@ -10,49 +10,44 @@ from ..models import Regla
 
 @unique
 class TipoDeEncadenamiento(Enum):
-    encadenamiento_hacia_atras = 0
-    encadenamiento_hacia_adelante = 1
+    hacia_atras = 0
+    hacia_adelante = 1
 
 
-class Motor():
-    """
-    El motor de inferencia emplea el algoritmo de encadenamiento hacia adelante
-    para hallar una conclusion o meta.
-    """
+class Motor:
+    """Motor de Inferencia"""
+
     def __init__(self):
-        """
-        Crea una instancia del motor de inferencia
-        """
-        self._hechos_marcados = []
-        self._objetivo_en_curso = None
-        self._objetivo_inicial = None
-        self._objetivos_previos = None
-        self._reglas_activas = Regla.objects.all()
-        self._reglas_inactivas = []
+        self.memoria_trabajo = Memoria()
+        self.hechos_marcados = []
+        self.objetivo_en_curso = None
+        self.objetivo_inicial = None
+        self.objetivos_previos = None
+        self.reglas_activas = Regla.objects.all()
+        self.reglas_inactivas = []
 
-    def asignar_valores_conocidos(self, hechos_conocidos):
+    def asignar_valores_conocidos(self, valores_conocidos):
         """
         Etapa 1.1: Asigna a los objetos sus valores conocidos
         :param hechos_conocidos:
         """
-        for k, v in hechos_conocidos.items():
-            k.valor = v
-            k.save()
-            self._hechos_marcados.append(k)
+        for k, v in valores_conocidos.items():
+            self.memoria_trabajo.agregar_hecho(k.titulo, v)
+            self.hechos_marcados.append(k)
 
     def cargar_objetivo_en_curso(self, hecho):
         """
         Etapa 1.2: Carga el objetivo en curso
         :param hecho: El nuevo objetivo en curso
         """
-        self._objetivo_en_curso = hecho
+        self.objetivo_en_curso = hecho
 
     def verificar_objetivo(self):
         """
         Etapa 1.3: Verifica si el objetivo esta marcado
         :return: True si el objetivo en curso esta marcado
         """
-        return self._objetivo_en_curso in self._hechos_marcados
+        return self.objetivo_en_curso in self.hechos_marcados
 
     def cargar_objetivos(self):
         """
@@ -62,9 +57,9 @@ class Motor():
             Objetivos previos []
             Designar todas las reglas como activas
         """
-        self._objetivo_inicial = self._objetivo_en_curso
-        self._hechos_marcados.append(self._objetivo_en_curso)
-        self._objetivos_previos = []
+        self.objetivo_inicial = self.objetivo_en_curso
+        self.hechos_marcados.append(self.objetivo_en_curso)
+        self.objetivos_previos = []
         self.buscar_regla()
 
     def buscar_regla(self):
@@ -74,14 +69,14 @@ class Motor():
         Etapa 3, caso contrario ir a la Etapa 5.
         """
         respuesta = None
-        for regla in self._reglas_activas:
+        for regla in self.reglas_activas:
             conclusion = regla.conclusion
             hechos = regla.hecho_set.all()
-            regla_valida = regla not in self._reglas_inactivas
-            conclusion_valida = conclusion not in self._objetivos_previos
+            regla_valida = regla not in self.reglas_inactivas
+            conclusion_valida = conclusion not in self.objetivos_previos
             hechos_validos = self.verificar_hechos(hechos)
             if (regla_valida and conclusion_valida and hechos_validos and
-                    conclusion == self._objetivo_en_curso):
+                    conclusion == self.objetivo_en_curso):
                 respuesta = regla
                 break
         if respuesta is not None:
@@ -95,14 +90,14 @@ class Motor():
         :param hechos:
         """
         for hecho in hechos:
-            if hecho in self._objetivos_previos:
+            if hecho in self.objetivos_previos:
                 return False
         return True
 
     def ejecutar_regla(
             self,
             regla,
-            tc=TipoDeEncadenamiento.encadenamiento_hacia_atras):
+            tc=TipoDeEncadenamiento.hacia_atras):
         """
         Etapa 3: Ejecuta la regla relacionada al objetivo en curso, si concluye
         se asigna el valor obtenido al objetivo en curso, e ir a la Etapa 6,
@@ -112,22 +107,21 @@ class Motor():
         """
         valor = True
         for hecho in regla.hecho_set.all():
-            if hecho.valor is not None:
-                valor &= hecho.valor
+            hecho_valor = self.memoria_trabajo.obtener_valor(hecho.titulo)
+            if hecho_valor is not None:
+                valor &= hecho_valor
             else:
-                if tc == TipoDeEncadenamiento.encadenamiento_hacia_atras:
+                if tc == TipoDeEncadenamiento.hacia_atras:
                     self.verificar_regla(regla)
                     return
-                elif tc == TipoDeEncadenamiento.encadenamiento_hacia_adelante:
+                elif tc == TipoDeEncadenamiento.hacia_adelante:
                     return False
-        if tc == TipoDeEncadenamiento.encadenamiento_hacia_atras:
-            self._objetivo_en_curso.valor = valor
-            self._objetivo_en_curso.save()
+        if tc == TipoDeEncadenamiento.hacia_atras:
+            self.memoria_trabajo.agregar_hecho(self.objetivo_en_curso.titulo, valor)
             self.validar_objetivo_en_curso()
-        elif tc == TipoDeEncadenamiento.encadenamiento_hacia_adelante:
-            regla.conclusion.valor = valor
-            regla.conclusion.save()
-            self._hechos_marcados.append(regla.conclusion)
+        elif tc == TipoDeEncadenamiento.hacia_adelante:
+            self.memoria_trabajo.agregar_hecho(regla.conclusion.titulo, valor)
+            self.hechos_marcados.append(regla.conclusion)
             return True
 
     def verificar_regla(self, regla):
@@ -135,27 +129,32 @@ class Motor():
         Etapa 4: Si todos los objetos de la regla estan marcados, se declara la
          regla como inactiva y se va a la Etapa 2
         """
-        if (regla.conclusion in self._hechos_marcados and
+        if (regla.conclusion in self.hechos_marcados and
                 self.verificar_hechos_marcados(regla.hecho_set.all())):
-            self._reglas_inactivas.append(regla)
+            self.reglas_inactivas.append(regla)
             self.buscar_regla()
         else:
-            self._objetivos_previos.append(self._objetivo_en_curso)
+            self.objetivos_previos.append(self.objetivo_en_curso)
             for hecho in regla.hecho_set.all():
-                if hecho.valor is None:
-                    self._objetivo_en_curso = hecho
-                    self._hechos_marcados.append(hecho)
+                hecho_valor = self.memoria_trabajo.obtener_valor(hecho.titulo)
+                if hecho_valor is None:
+                    self.objetivo_en_curso = hecho
+                    self.hechos_marcados.append(hecho)
                     self.buscar_regla()
                     break
 
     def verificar_hechos_marcados(self, hechos):
         """
         Etapa 4.1: Verifica que los hechos esten marcados
-        :param hechos:
         """
         resultado = True
         for hecho in hechos:
-            if hecho in self._hechos_marcados:
+            hecho_valor = self.memoria_trabajo.obtener_valor(hecho.titulo)
+            # Si el hecho es falso, la regla se deberia desactivar
+            if hecho_valor is False:
+                resultado = True
+                break
+            if hecho_valor in self.hechos_marcados:
                 resultado &= True
             else:
                 resultado &= False
@@ -169,7 +168,7 @@ class Motor():
         objetivo en curso.Si el valor es proporcionado, es asignado y se pasa
         a la Etapa 6, caso contrario se pasa a la Etapa 6.
         """
-        if self._objetivo_en_curso == self._objetivo_inicial:
+        if self.objetivo_en_curso == self.objetivo_inicial:
             return True
         else:
             raise Exception('El valor es desconocido')
@@ -180,11 +179,11 @@ class Motor():
         a la Etapa 7, en otro caso designar el objetivo previo como objetivo en
         curso, eliminarlo de objetivos e ir a la Etapa 2
         """
-        if self._objetivo_en_curso == self._objetivo_inicial:
+        if self.objetivo_en_curso == self.objetivo_inicial:
             return True
         else:
-            self._objetivo_en_curso = self._objetivos_previos[-1]
-            del self._objetivos_previos[-1]
+            self.objetivo_en_curso = self.objetivos_previos[-1]
+            del self.objetivos_previos[-1]
             self.buscar_regla()
 
     def obtener_objetivo_en_curso(self):
@@ -192,8 +191,9 @@ class Motor():
         Etapa 7
         :return: True si el objetivo en curso tiene un valor
         """
-        if self._objetivo_en_curso.valor is not None:
-            return self._objetivo_en_curso
+        valor = self.memoria_trabajo.obtener_valor(self.objetivo_en_curso.titulo)
+        if valor is not None:
+            return self.objetivo_en_curso
         else:
             return None
 
@@ -201,13 +201,35 @@ class Motor():
         """
         Realiza un encadenamiento hacia adelante
         """
-        for regla in self._reglas_activas:
-            if regla not in self._reglas_inactivas:
-                activada = self.ejecutar_regla(
-                   regla,
-                   TipoDeEncadenamiento.encadenamiento_hacia_adelante)
+        for regla in self.reglas_activas:
+            if regla not in self.reglas_inactivas:
+                activada = self.ejecutar_regla(regla, TipoDeEncadenamiento.hacia_adelante)
                 if activada:
-                    self._reglas_inactivas.append(regla)
+                    self.reglas_inactivas.append(regla)
                     self.encadenar_reglas()
                 else:
                     continue
+
+
+class Memoria():
+    """Memoria de Trabajo"""
+
+    def __init__(self):
+        self.hechos_conocidos = {}
+
+    def obtener_valor(self, k):
+        """Obtiene el valor del hecho conocido
+        :param k: el titulo del Hecho
+        """
+        if k in self.hechos_conocidos:
+            return self.hechos_conocidos[k]
+        else:
+            return None
+
+    def agregar_hecho(self, k, v):
+        """Agrega un hecho conocido a la memoria
+        :param k: el titulo del hecho
+        :param v: el valor del hecho
+        """
+        if k not in self.hechos_conocidos:
+            self.hechos_conocidos[k] = v
