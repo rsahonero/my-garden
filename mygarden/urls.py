@@ -22,5 +22,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^greengarden/', include('greengarden.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^', views.home, name='home')
+    url(r'^$', views.home, name='home')
 ]

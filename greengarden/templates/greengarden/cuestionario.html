@@ -33,15 +33,15 @@
         {% if memoria %}
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Memoria</h3>
+                    <h3 class="panel-title">Memoria</h->
                 </div>
-                <ul id="memoria" class="list-group">
-                {% for hecho in memoria %}
+                <ul id="memoria" class="memoria-trabajo list-group">
+                {% for k, v in memoria.items %}
                 	<li class="list-group-item">
-                    {% if hecho.valor %}
-                    <span style="color: green">{{ hecho.titulo|capfirst }}</span>
+                    {% if v %}
+                    <span style="color: green">{{ k|capfirst }}</span>
                     {% else %}
-                    <span style="color: red">{{ hecho.titulo|capfirst }}</span>
+                    <span style="color: red">{{ k|capfirst }}</span>
                     {% endif %}
                 	</li>
                 {% endfor %}

@@ -108,6 +108,10 @@ class Motor:
         valor = True
         for hecho in regla.hecho_set.all():
             hecho_valor = self.memoria_trabajo.obtener_valor(hecho.titulo)
+            if hecho_valor is False:
+                self.memoria_trabajo.agregar_hecho(regla.conclusion.titulo, False)
+                valor = False
+                return
             if hecho_valor is not None:
                 valor &= hecho_valor
             else:

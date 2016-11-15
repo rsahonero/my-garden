@@ -52,7 +52,7 @@ def task_monitorizar_condiciones_atmosfericas():
     motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
     motor_inferencia.encadenar_reglas()
     metas = []
-    for hecho in motor_inferencia._hechos_marcados:
+    for hecho in motor_inferencia.hechos_marcados:
         if hecho.titulo.startswith('probabilidad'):
             metas.append(str(hecho.id))
 
@@ -63,6 +63,6 @@ def task_monitorizar_condiciones_atmosfericas():
     condiciones_atmosfericas.metas = ';'.join(metas)
     condiciones_atmosfericas.save()
 
-    logger.info(motor_inferencia._hechos_marcados)
+    logger.info(motor_inferencia.hechos_marcados)
     logger.info("Monitorizacion completada")
     return True

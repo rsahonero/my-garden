@@ -33,12 +33,14 @@ class HechoReglasInline(admin.TabularInline):
 
 
 class ReglaAdmin(admin.ModelAdmin):
+    list_filter = ('titulo',)
     inlines = [
         HechoReglasInline,
     ]
 
 
 class HechoAdmin(admin.ModelAdmin):
+    list_filter = ('titulo',)
     inlines = [
         HechoReglasInline,
     ]

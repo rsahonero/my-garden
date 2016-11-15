@@ -10,6 +10,7 @@ from .inferencia.motor import Motor
 indice = 0
 motor_inferencia = Motor()
 metas = []
+hechos_conocidos = {}
 
 
 def cargar_metas():
@@ -18,6 +19,7 @@ def cargar_metas():
     meta_ids = condicion_atmosferica.metas.split(';')
     for meta_id in meta_ids:
         hecho = Hecho.objects.get(pk=meta_id)
+        hechos_conocidos[hecho] = True;
         for regla in Regla.objects.filter(conclusion__es_meta=True):
             if hecho in regla.hecho_set.all():
                 metas.append(regla.conclusion)
@@ -29,7 +31,7 @@ def home(request):
     return render(request, 'greengarden/home.html')
 
 
-def index(request):
+def index(request, codigo=None):
     global indice
     global metas
     metas = []
@@ -37,8 +39,11 @@ def index(request):
     estado = None
     condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
     meta_ids = condicion_atmosferica.metas.split(';')
-    if len(meta_ids) > 0:
+    if len(meta_ids) > 0 and codigo is None:
         estado = Estado.objects.filter(codigo='RS')[0]
+    elif codigo is not None:
+        estado = Estado.objects.filter(codigo='AS')[0]
+    
     context = {
         'temperatura': 'Alta',
         'humedad': 'Relativa',
@@ -50,12 +55,10 @@ def index(request):
 
 
 def cuestionario(request):
-    memoria = []
-    hecho = motor_inferencia._objetivo_en_curso
+    hechos_conocidos = motor_inferencia.memoria_trabajo.hechos_conocidos
+    memoria = {k:v for (k,v) in hechos_conocidos.items() if not k.startswith('probabilidad') }
+    hecho = motor_inferencia.objetivo_en_curso
     hecho_contexto = Hecho.objects.filter(titulo=hecho.titulo)[0]
-    for hecho_marcado in motor_inferencia._hechos_marcados:
-        if hecho_marcado.valor is not None and hecho_marcado.es_meta is False:
-            memoria.append(hecho_marcado)
     contexto = {
         'hecho': hecho_contexto,
         'memoria': memoria,
@@ -66,14 +69,10 @@ def cuestionario(request):
 def inferir(request):
     global indice
     global metas
+    global hechos_conocidos
     metas = cargar_metas()
     if request.method == 'POST':
-        for hecho in Hecho.objects.all():
-            if hecho.es_monitorizable is False or hecho.es_meta:
-                hecho.valor = None
-                hecho.save()
-                hechos_conocidos = {}
-        motor_inferencia._hechos_marcados = []
+        motor_inferencia.hechos_marcados = []
         motor_inferencia.asignar_valores_conocidos(hechos_conocidos)
         motor_inferencia.cargar_objetivo_en_curso(metas[indice])
 
@@ -89,14 +88,13 @@ def inferir(request):
 
 
 def evaluar(request):
-    hecho = motor_inferencia._objetivo_en_curso
+    hecho = motor_inferencia.objetivo_en_curso
     if request.method == "POST":
         valor = request.POST["valor"]
         if valor == "Si":
-            hecho.valor = True
+            motor_inferencia.memoria_trabajo.agregar_hecho(hecho.titulo, True)
         else:
-            hecho.valor = False
-        hecho.save()
+            motor_inferencia.memoria_trabajo.agregar_hecho(hecho.titulo, False)
     try:
         motor_inferencia.validar_objetivo_en_curso()
     except Exception:
@@ -108,8 +106,10 @@ def conclusion(request):
     global indice
     hecho = motor_inferencia.obtener_objetivo_en_curso()
     hecho_contexto = Hecho.objects.filter(titulo=hecho.titulo)[0]
-    if hecho.valor is not None:
-        if hecho.valor:
+    hecho_valor = motor_inferencia.memoria_trabajo.obtener_valor(hecho.titulo)
+    if hecho_valor is not None:
+        if hecho_valor is True:
+            motor_inferencia.memoria_trabajo.hechos_conocidos = {}
             contexto = {
                 'hecho': hecho_contexto
             }
@@ -124,16 +124,9 @@ def conclusion(request):
                 try:
                     motor_inferencia.cargar_objetivos()
                 except Exception:
-                    return HttpResponseRedirect(
-                            reverse('greengarden:cuestionario'))
-            contexto = {
-                'temperatura': 'Alta',
-                'humedad': 'Relativa',
-                'estacion': 'Primavera',
-                'ultimo_escaneo': timezone.now(),
-                'estado': Estado.objects.filter(codigo='AS')[0],
-            }
-            return render(request, "greengarden/index.html", context=contexto)
+                    return HttpResponseRedirect(reverse('greengarden:cuestionario'))
+            motor_inferencia.memoria_trabajo.hechos_conocidos = {}
+            return HttpResponseRedirect(reverse('greengarden:index', args=[1]))
 
 
 def actualizar(request):
