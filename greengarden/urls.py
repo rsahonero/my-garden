@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^inferir/$', views.inferir, name='inferir'),
     url(r'^evaluar/$', views.evaluar, name='evaluar'),
     url(r'^actualizar/$', views.actualizar, name='actualizar'),
+    url(r'^ayuda/$', views.ayuda, name='ayuda'),
 ]

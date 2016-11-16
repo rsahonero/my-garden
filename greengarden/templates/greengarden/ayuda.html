@@ -1,0 +1,79 @@
+{% extends "base.html" %} 
+{% load staticfiles %} 
+{% block content %}
+{% load static %}
+<div class="row">
+	<div class="col-md-4">
+		<img src="/static/greengarden/imagenes/ayuda_condiciones_atmosfericas.png" class="img-responsive img-rounded">
+	</div>
+	<div class="col-md-8">
+		<h3>Condiciones Atmosfericas</h3>
+		<p>
+		El objetivo de este segmento es brindar al usuario la informacion de las condiciones atmosfericas.
+		</p>
+		<p>
+		Si se hace click sobre el boton "Actualzar", el mismo mostrara el tiempo en el que se realizo el ultimo escaneo,
+		y cuanto falta para el siguiente. De a cuerdo a los datos mostrados el sistema experto calcula mediante un encadenaminto
+		hacia adelante las posibles plagas y/o enfermedades que pueden estar afectando al cultivo de flores y rosas.
+		</p>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-4">
+		<img src="/static/greengarden/imagenes/ayuda_inferencia.png" class="img-responsive img-rounded">
+	</div>
+	<div class="col-md-8">
+		<h3>Inferencia</h3>
+		<p>
+		Mediante el uso de los datos obtenidos por la monitorizacion el sistema experto realiza un encadenamiento hacia
+		atras para confirmar una de las posibilidades.
+		</p>
+		<p>
+		Al presionar el boton continuar el sistema experto buscara una regla asociada a una de las probabilidades, luego de 
+		hallarla si desconoce el valor, preguntara al usuario por el mismo.
+		</p>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-4">
+		<img src="/static/greengarden/imagenes/ayuda_social_media.png" class="img-responsive img-rounded">
+	</div>
+	<div class="col-md-8">
+		<h3>Social</h3>
+		<p>
+		Green Garden es un proyecto de codigo abierto y cualquier contribucion es bien venida.
+		</p>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-8">
+		<img src="/static/greengarden/imagenes/ayuda_cuestionario.png" class="img-responsive img-rounded">
+	</div>
+	<div class="col-md-4">
+		<h3>Cuestionario</h3>
+		<p>
+		Pregunta al usuario por el valor de un hecho en particlar, cabe mencionar que es obligatorio seleccionar
+		una de las dos alternativas mostradas.
+		</p>
+	</div>
+</div>
+<hr>
+<div class="row">
+	<div class="col-md-8">
+		<img src="/static/greengarden/imagenes/ayuda_explicacion.png" class="img-responsive img-rounded">
+	</div>
+	<div class="col-md-4">
+		<h3>Explicacion</h3>
+		<p>
+		Si se tuviese alguna duda sobre un hecho en particular el sistema experto muestra una descripcion mas detallada del
+		hecho en cuestion.
+		</p>
+	</div>
+</div>
+{% endblock content %}
+{% block scripts %}
+	<script src="{% static 'greengarden/ayuda/ayuda.js' %}"></script>
+{% endblock scripts %}

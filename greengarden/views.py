@@ -31,6 +31,10 @@ def home(request):
     return render(request, 'greengarden/home.html')
 
 
+def ayuda(request):
+    return render(request, "greengarden/ayuda.html")
+
+
 def index(request, codigo=None):
     global indice
     global metas
