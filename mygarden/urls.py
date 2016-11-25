@@ -18,6 +18,8 @@ from django.contrib import admin
 
 from greengarden import views
 
+admin.site.site_header = 'Administración de GreenGarden'
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^greengarden/', include('greengarden.urls')),
