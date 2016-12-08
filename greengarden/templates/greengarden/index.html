@@ -4,7 +4,7 @@
         <button class="close" type="button" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        Ultimo escaneo realizado a las 12:30 p.m. el siguiente escaneo esta programado para las 12:30 a.m.
+        Ultimo escaneo realizado el <span id="ultimo-escaneo"></span>
     </div>
     <div class="jumbotron">
         <div class="container">
@@ -23,9 +23,9 @@
                 width="140" height="140">
             <h2>Condiciones Atmosf&eacute;ricas</h2>
             <p>
-                La estacion es {{ estacion }}<br>
-                La temperatura es {{ temperatura }}<br>
-                El nivel de humedad es {{ humedad }}<br>
+                Mes recuperado: {{ estacion.titulo | title}}<br>
+                Temperatura: {{ temperatura.titulo | title }}<br>
+                {{ humedad.titulo | title }}<br>
                 Ultimo escaneo: {{ ultimo_escaneo }}
             </p>
             <div>

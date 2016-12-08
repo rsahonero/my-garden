@@ -47,12 +47,12 @@ def index(request, codigo=None):
         estado = Estado.objects.filter(codigo='RS')[0]
     elif codigo is not None:
         estado = Estado.objects.filter(codigo='AS')[0]
-    
+
     context = {
-        'temperatura': 'Alta',
-        'humedad': 'Relativa',
-        'estacion': 'Primavera',
-        'ultimo_escaneo': timezone.now(),
+        'temperatura': Hecho.objects.get(pk=condicion_atmosferica.temperatura),
+        'humedad': Hecho.objects.get(pk=condicion_atmosferica.humedad),
+        'estacion': Hecho.objects.get(pk=condicion_atmosferica.estacion),
+        'ultimo_escaneo': condicion_atmosferica.ultima_actualizacion,
         'estado': estado,
     }
     return render(request, "greengarden/index.html", context)
@@ -135,6 +135,7 @@ def conclusion(request):
 
 def actualizar(request):
     if request.method == 'GET':
+        condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
         return JsonResponse({
-            'tiempo_actual': str(timezone.now())
+            'tiempo_actual': condicion_atmosferica.ultima_actualizacion
         })
