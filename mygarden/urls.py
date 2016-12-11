@@ -13,16 +13,40 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+from datetime import datetime
+
 from django.conf.urls import include, url
 from django.contrib import admin
 
-from greengarden import views
+import django.contrib.auth.views
+
+import greengarden.views
+import greengarden.forms
 
 admin.site.site_header = 'Administración de GreenGarden'
+admin.autodiscover()
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^greengarden/', include('greengarden.urls')),
     url(r'^tinymce/', include('tinymce.urls')),
-    url(r'^$', views.home, name='home')
+    url(r'^$', greengarden.views.home, name='home'),
+    url(r'^login/$',
+        django.contrib.auth.views.login,
+        {
+            'template_name': 'greengarden/login.html',
+            'authentication_form': greengarden.forms.BootstrapAuthenticationForm,
+            'extra_context':
+            {
+                'title': 'Log in',
+                'year': datetime.now().year,
+            }
+        },
+        name='login'),
+    url(r'^logout$',
+        django.contrib.auth.views.logout,
+        {
+            'next_page': '/',
+        },
+        name='logout'),
 ]

@@ -24,8 +24,11 @@
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/greengarden/">Inicio</a></li>
                     <li><a href="/greengarden/ayuda/">Ayuda</a></li>
-                    <li><a href="#">Informacion</a></li>
+                    {% if user.is_authenticated %}
+                    <li><a href="/admin">Admin</a></li>
+                    {% endif %}
                 </ul>
+                {% include 'greengarden/loginparcial.html' %}
             </div>
         </div>
     </nav>
