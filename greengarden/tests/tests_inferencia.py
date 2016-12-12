@@ -53,7 +53,7 @@ class InferenciaTest(TestCase):
             hecho_d: True,
             hecho_e: True,
             hecho_f: True,
-            hecho_l: True
+            hecho_l: False
         }
 
         motor_inferencia = Motor()
@@ -68,7 +68,7 @@ class InferenciaTest(TestCase):
         self.assertTrue(d_value)
         self.assertTrue(e_value)
         self.assertTrue(f_value)
-        self.assertTrue(l_value)
+        self.assertFalse(l_value)
 
     def test_cargar_objetivo_en_curso(self):
         motor_inferencia = Motor()

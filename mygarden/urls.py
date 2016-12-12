@@ -38,7 +38,7 @@ urlpatterns = [
             'authentication_form': greengarden.forms.BootstrapAuthenticationForm,
             'extra_context':
             {
-                'title': 'Log in',
+                'title': 'Ingresar',
                 'year': datetime.now().year,
             }
         },

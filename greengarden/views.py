@@ -19,7 +19,7 @@ def cargar_metas():
     meta_ids = condicion_atmosferica.metas.split(';')
     for meta_id in meta_ids:
         hecho = Hecho.objects.get(pk=meta_id)
-        hechos_conocidos[hecho] = True;
+        hechos_conocidos[hecho] = True
         for regla in Regla.objects.filter(conclusion__es_meta=True):
             if hecho in regla.hecho_set.all():
                 metas.append(regla.conclusion)
