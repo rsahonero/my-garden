@@ -7,7 +7,6 @@
             type: 'GET',
             url: '/greengarden/actualizar/',
             success: function (data) {
-
                 var monthNames = [
                     "Enero", "Febrero", "Marzo",
                     "Abril", "Mayo", "Junio", "Julio",
@@ -21,8 +20,15 @@
                 var year = date.getFullYear();
                 var fechaFormateada = day + ' de ' + monthNames[monthIndex] + ' de ' + year;
                 var tiempoFormateado = date.getHours() + ':' + date.getMinutes();
-                $('#ultimo-escaneo').html(fechaFormateada + ' a las ' + tiempoFormateado);
-                $('#info-actualizacion').show();
+                
+                $('#escaneo').text(fechaFormateada + ' ' + tiempoFormateado);               
+                $('#estacion').text(data.estacion);
+                $('#temperatura').text(data.temperatura);
+                $('#humedad').text(data.humedad);
+                
+                $('.btn-default').css('border-color', '#009688');
+                $('.btn-default').css('color', '#333');
+                $('.btn-default').css('background-color', '#FFF');
             }
         });
     });

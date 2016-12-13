@@ -136,6 +136,12 @@ def conclusion(request):
 def actualizar(request):
     if request.method == 'GET':
         condicion_atmosferica = CondicionAtmosferica.objects.get(pk=1)
+        estacion = Hecho.objects.get(pk=condicion_atmosferica.estacion)
+        temperatura = Hecho.objects.get(pk=condicion_atmosferica.temperatura)
+        humedad = Hecho.objects.get(pk=condicion_atmosferica.humedad)
         return JsonResponse({
-            'tiempo_actual': condicion_atmosferica.ultima_actualizacion
+            'tiempo_actual': condicion_atmosferica.ultima_actualizacion,
+            'estacion': estacion.titulo.capitalize(),
+            'temperatura': temperatura.titulo.capitalize(),
+            'humedad': humedad.titulo.capitalize()
         })
