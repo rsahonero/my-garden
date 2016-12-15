@@ -30,22 +30,47 @@
             </div>
         </div>
         <div class="col-md-4">
-        {% if memoria %}
+        {% if memoria.items %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Memoria</h->
                 </div>
-                <ul id="memoria" class="memoria-trabajo list-group">
-                {% for k, v in memoria.items %}
-                	<li class="list-group-item">
-                    {% if v %}
-                    <span style="color: green">{{ k|capfirst }}</span>
-                    {% else %}
-                    <span style="color: red">{{ k|capfirst }}</span>
-                    {% endif %}
-                	</li>
-                {% endfor %}
-                </ul>
+                <div class="panel-body">
+                    <p>
+                        Si el nombre del hecho esta de color <span style="color: red">rojo</span>
+                        quiere decir que su valor en la memoria de trabajo es falso, si es
+                        <span style="color: green">verde</span>, quiere decir que su
+                        valor en la memoria de trabajo es verdadero.
+                    </p>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Hecho</th>
+                            <th>Tipo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for k,v in memoria.items %}
+                        <tr>
+                            <td>
+                                {% if v %}
+                                <span style="color: green">{{ k.titulo | capfirst }}</span>
+                                {% else %}
+                                <span style="color: red">{{ k.titulo | capfirst }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if k.es_meta %}
+                                <span>Plaga</span>
+                                {% else %}
+                                <span>S&iacute;ntoma</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
         {% endif %}
         </div>

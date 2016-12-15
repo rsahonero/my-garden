@@ -60,7 +60,11 @@ def index(request, codigo=None):
 
 def cuestionario(request):
     hechos_conocidos = motor_inferencia.memoria_trabajo.hechos_conocidos
-    memoria = {k:v for (k,v) in hechos_conocidos.items() if not k.startswith('probabilidad') }
+    hechos_memoria = {k:v for (k,v) in hechos_conocidos.items() if not k.startswith('probabilidad') }
+    memoria = {}
+    for k,v in hechos_memoria.items():
+        hecho_db = Hecho.objects.filter(titulo=k)[0]
+        memoria[hecho_db] = v
     hecho = motor_inferencia.objetivo_en_curso
     hecho_contexto = Hecho.objects.filter(titulo=hecho.titulo)[0]
     contexto = {
