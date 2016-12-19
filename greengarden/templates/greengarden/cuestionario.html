@@ -28,22 +28,22 @@
                 	{% include 'greengarden/cuestionario_item.html' %}
                 </ul>
             </div>
+            <div class="descripcion" style="border: 1px solid #004D40; border-radius: 4px; padding: 10px 10px 5px 10px;">
+                <p>
+                    Si el nombre del hecho esta de color <span style="color: red">rojo</span>
+                    quiere decir que su valor en la memoria de trabajo es falso, si es
+                    <span style="color: green">verde</span>, quiere decir que su
+                    valor en la memoria de trabajo es verdadero.
+                </p>
+            </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 ">
         {% if memoria.items %}
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Memoria</h->
                 </div>
-                <div class="panel-body">
-                    <p>
-                        Si el nombre del hecho esta de color <span style="color: red">rojo</span>
-                        quiere decir que su valor en la memoria de trabajo es falso, si es
-                        <span style="color: green">verde</span>, quiere decir que su
-                        valor en la memoria de trabajo es verdadero.
-                    </p>
-                </div>
-                <table class="table">
+                <table class="memoria-trabajo table">
                     <thead>
                         <tr>
                             <th>Hecho</th>

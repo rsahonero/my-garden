@@ -89,9 +89,10 @@ body > .container {
     cursor: pointer;
 }
 
-.cuestionario .memoria-trabajo.list-group {
+.cuestionario .memoria-trabajo.table {
 	max-height: 300px;
 	overflow-y: auto;
+    display: block;
 }
 
 /* styles for validation helpers */
